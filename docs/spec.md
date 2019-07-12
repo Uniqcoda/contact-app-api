@@ -22,8 +22,8 @@ Returns status code `200` with the data,
       "firstName": "Dan",
       "lastName": "Abramov",
       "phone": "+2348055481764",
-      "isBlocked": false,
       "email": "dana@yah.com",
+      "isBlocked": false,
       "id": 2
   },
   ...,
@@ -66,7 +66,7 @@ POST /contacts
 The request body should be in the format,
 
 ```ts
-interface CreateContact {
+interface ICreateContact {
 	firstName: string;
 	lastName?: string;
 	phone: string; //This should be of the international format
@@ -90,12 +90,14 @@ Returns status code of `200` if contact was successfully created. \
 The response body should contain
 
 ```ts
-interface CreateContactResponse {
+interface ICreateContactResponse {
 	id: string; // the auto generated id of the new contact
-	created: string; // the ISO data of when the contact was created
-	contact: CreateContact;
+	createdAt: string; // the ISO date of when the contact was created
+	contact: ICreateContact;
 }
 ```
+
+Returns status code `400` if contact was not successfully created.
 
 ## 4. To update a contact by id
 
