@@ -1,4 +1,4 @@
-# CONTACT APP
+# CONTACT APP API
 
 ## 1. To view all contacts
 
@@ -46,15 +46,13 @@ GET /contacts/1
 Returns status code `200` with the data below, if the contact was found and the `isBlocked` property is `false`
 
 ```json
-[
-	{
-		"firstName": "Ochuko",
-		"lastName": "Ekrresa",
-		"phone": "+2348056431780",
-		"email": "ochukoe@yah.com",
-		"id": 1
-	}
-]
+{
+	"firstName": "Ochuko",
+	"lastName": "Ekrresa",
+	"phone": "+2348056431780",
+	"email": "ochukoe@yah.com",
+	"id": 1
+}
 ```
 
 Returns status code `404` if contact was not found or the `isBlocked` property is `true`.
