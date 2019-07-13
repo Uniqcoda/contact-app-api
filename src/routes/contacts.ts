@@ -61,7 +61,13 @@ const contact4: ICreateContactResponse = {
 	},
 };
 
-const contactsArray: ICreateContactResponse[] = [contact1, contact2, contact3, contact4];
+export const contactsArray: ICreateContactResponse[] = [contact1, contact2, contact3, contact4];
+
+// A function that filters the contacts array for unblocked contacts
+function getUnblocked() {
+	return contactsArray.filter(contact => contact.isBlocked === false);
+}
+
 // the phone num should either start with country code or 0 (example +2348067546986, or 08067546986)
 const phoneNumRegex = /^(\+[0-9]{3}|0)[0-9]{10}$/;
 
@@ -77,7 +83,7 @@ const schema = {
 		.optional()
 		.email(),
 };
-const idSchema = {
+export const idSchema = {
 	contactId: joi.string().required(),
 };
 
@@ -97,15 +103,14 @@ router.post('/', (req, res, _next) => {
 	res.status(200).json({ newContact });
 });
 
-// A function that filters the contacts array for unblocked contacts
-function getUnblocked() {
-	return contactsArray.filter(contact => contact.isBlocked === false);
-}
-
 // TO GET ALL CONTACTS
 router.get('/', (_req, res, _next) => {
 	const contacts = getUnblocked();
-	res.status(200).json({ contacts });
+	if (contacts) {
+		res.status(200).json({ contacts });
+		return;
+	}
+	res.status(404).json({ error: `No contacts available, also check your blocked contacts.` });
 });
 
 //  TO GET A CONTACT BY ID

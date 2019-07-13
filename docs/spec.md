@@ -103,13 +103,14 @@ The response body should contain
 interface ICreateContactResponse {
 	id: string; // the auto generated id of the new contact
 	createdAt: string; // the ISO date of when the contact was created
-	contact: ICreateContact;
+	isBlocked: boolean;
+	value: ICreateContact;
 }
 ```
 
 Returns status code `400` if contact was not successfully created.
 
-## 4. To update a contact by id
+## 4. To update/block a contact by id
 
 ```
 PATCH /contacts/:contactID
@@ -123,6 +124,7 @@ The request body should be in the format below, with one or more of these proper
 	lastName?: string;
 	phone?: string;
 	email?: string;
+	block?: boolean;
 }
 ```
 
@@ -139,6 +141,12 @@ PATCH /contacts/3
 }
 ```
 
+To block the Bill Gates contact
+
+```json
+{ "block": true }
+```
+
 Returns status code `200` if contact was successfully updated. \
 Returns status code `404` if contact was not found.
 
@@ -152,39 +160,11 @@ For example
 DELETE /contacts/1
 ```
 
-Returns status code `200` if contact was successfully deleted, and an array of all contacts. \
+Returns status code `200` if contact was successfully deleted, and an array of all contacts that are not blocked. \
 Returns status code `404` if contact was not found.
 
-## 6. To block a contact by id
 
-```
-PATCH /contacts/:contactID
-```
-
-The request body should be in the format below, with the `isBlocked` property set to `true`
-
-```ts
-{
-	isBlocked: boolean;
-}
-```
-
-For example, to block the Bill Gates contact,
-
-```
-PATCH /contacts/3
-```
-
-```json
-{
-	"isBlocked": true
-}
-```
-
-Returns status code `200` if contact was successfully blocked. \
-Returns status code `404` if contact was not found.
-
-## 7. To view all blocked contacts
+## 6. To view all blocked contacts
 
 ```
 GET /contacts/blocked
@@ -206,7 +186,7 @@ Returns status code `200` with the data
 ]
 ```
 
-## 8. To unblock a contact by id
+## 7. To unblock a contact by id
 
 ```
 PATCH /contacts/:contactID
