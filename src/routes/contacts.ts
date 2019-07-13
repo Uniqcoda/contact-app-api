@@ -13,11 +13,13 @@ interface ICreateContact {
 interface ICreateContactResponse {
 	id: string; // the auto generated id of the new contact
 	createdAt: string; // the ISO date of when the contact was created
+	isBlocked: boolean;
 	value: ICreateContact;
 }
 const contact1: ICreateContactResponse = {
 	id: '1',
 	createdAt: 'today',
+	isBlocked: false,
 	value: {
 		firstName: 'Ochuko',
 		lastName: 'Ekrresa',
@@ -28,6 +30,7 @@ const contact1: ICreateContactResponse = {
 const contact2: ICreateContactResponse = {
 	id: '2',
 	createdAt: 'today',
+	isBlocked: true,
 	value: {
 		firstName: 'Ochuko',
 		lastName: 'Ekrresa',
@@ -66,7 +69,8 @@ router.post('/', (req, res, _next) => {
 	}
 	const id = new Date().getTime().toString();
 	const createdAt = new Date().toLocaleDateString();
-	const data = { value, id, createdAt };
+	const isBlocked = false;
+	const data = { value, id, isBlocked, createdAt };
 	contactsArray.push(data);
 
 	res.status(200).json({ data });
@@ -79,12 +83,38 @@ router.get('/', (_req, res, _next) => {
 
 //  TO GET A CONTACT BY ID
 router.get('/:contactId', (req, res, _next) => {
-	const { error, value: contactId } = joi.validate(req.params, idSchema, { abortEarly: false, stripUnknown: true });
+	const contactId = req.params.contactId;
+	const { error, value } = joi.validate({ contactId }, idSchema, { abortEarly: false, stripUnknown: true });
 	if (error) {
 		res.status(400).json({ error });
 		return;
 	}
-	const data = contactsArray.find(contact => contact.id === contactId);
-	res.status(200).json({ data });
+
+	const data = contactsArray.find(contact => contact.id === value.contactId);
+	if (data) {
+		res.status(200).json({ data });
+		return;
+	}
+	res.status(404).json({ error: `No contact was found with id - ${contactId} ` });
+});
+
+// TO DELETE A CONTACT BY ID
+router.delete('/:contactId', (req, res, _next) => {
+	const contactId = req.params.contactId;
+	const { error, value } = joi.validate({ contactId }, idSchema, { abortEarly: false, stripUnknown: true });
+	if (error) {
+		res.status(400).json({ error });
+		return;
+	}
+
+	for (const index in contactsArray) {
+		const contact = contactsArray[index];
+		if (contact.id === value.contactId) {
+			contactsArray.splice(Number(index), 1);
+			res.status(200).json({ contactsArray });
+			return;
+		}
+	}
+	res.status(404).json({ error: `No contact was found with id - ${contactId} ` });
 });
 export default router;

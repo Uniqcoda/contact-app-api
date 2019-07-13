@@ -11,26 +11,32 @@ Returns status code `200` with the data,
 ```json
 [
 	{
-      "firstName": "Ochuko",
-      "lastName": "Ekrresa",
-      "phone": "+2348056431780",
-      "email": "ochukoe@yah.com",
-      "isBlocked": false,
-      "id": 1,
+		"id": "1",
+		"createdAt": "today",
+		"isBlocked": false,
+		"value": {
+			"firstName": "Ochuko",
+			"lastName": "Ekrresa",
+			"phone": "+2348056431780",
+			"email": "ochukoe@yah.com"
+		}
 	},
 	{
-      "firstName": "Dan",
-      "lastName": "Abramov",
-      "phone": "+2348055481764",
-      "email": "dana@yah.com",
-      "isBlocked": false,
-      "id": 2
-  },
-  ...,
+		"id": "2",
+		"createdAt": "today",
+		"isBlocked": false,
+		"value": {
+			"firstName": "Dan",
+			"lastName": "Abramov",
+			"phone": "+2348055481764",
+			"email": "dana@yah.com"
+		}
+	},
+	...,
 ]
 ```
 
-Note that there is an `isBlocked` property set to `false` by default. \
+Note that the `isBlocked` property set to `false` by default. \
 Also, the blocked contacts will not be displayed by default.
 
 ## 2. To view a single contact by id
@@ -47,11 +53,15 @@ Returns status code `200` with the data below, if the contact was found and the 
 
 ```json
 {
-	"firstName": "Ochuko",
-	"lastName": "Ekrresa",
-	"phone": "+2348056431780",
-	"email": "ochukoe@yah.com",
-	"id": 1
+	"id": "1",
+	"createdAt": "today",
+	"isBlocked": false,
+	"value": {
+		"firstName": "Ochuko",
+		"lastName": "Ekrresa",
+		"phone": "+2348056431780",
+		"email": "ochukoe@yah.com"
+	}
 }
 ```
 
