@@ -92,10 +92,9 @@ router.post('/', (req, res, _next) => {
 	const id = new Date().getTime().toString();
 	const createdAt = new Date().toLocaleDateString();
 	const isBlocked = false;
-	const data = { value, id, isBlocked, createdAt };
-	contactsArray.push(data);
-
-	res.status(200).json({ data });
+	const newContact = { id, createdAt, isBlocked, value };
+	contactsArray.push(newContact);
+	res.status(200).json({ newContact });
 });
 
 // A function that filters the contacts array for unblocked contacts
@@ -105,22 +104,22 @@ function getUnblocked() {
 
 // TO GET ALL CONTACTS
 router.get('/', (_req, res, _next) => {
-	const unblockedContatcs = getUnblocked();
-	res.status(200).json(unblockedContatcs);
+	const contacts = getUnblocked();
+	res.status(200).json({ contacts });
 });
 
 //  TO GET A CONTACT BY ID
 router.get('/:contactId', (req, res, _next) => {
-	const contactId = req.params.contactId;
+	const contactId: string = req.params.contactId;
 	const { error, value } = joi.validate({ contactId }, idSchema, { abortEarly: false, stripUnknown: true });
 	if (error) {
 		res.status(400).json({ error });
 		return;
 	}
 
-	const data = contactsArray.find(contact => contact.id === value.contactId && !contact.isBlocked);
-	if (data) {
-		res.status(200).json({ data });
+	const contact = contactsArray.find(contact => contact.id === value.contactId && !contact.isBlocked);
+	if (contact) {
+		res.status(200).json({ contact });
 		return;
 	}
 	res.status(404).json({ error: `No contact was found with id - ${contactId}, contact could be blocked` });
@@ -128,7 +127,7 @@ router.get('/:contactId', (req, res, _next) => {
 
 // TO DELETE A CONTACT BY ID
 router.delete('/:contactId', (req, res, _next) => {
-	const contactId = req.params.contactId;
+	const contactId: string = req.params.contactId;
 	const { error, value } = joi.validate({ contactId }, idSchema, { abortEarly: false, stripUnknown: true });
 	if (error) {
 		res.status(400).json({ error });
@@ -139,11 +138,30 @@ router.delete('/:contactId', (req, res, _next) => {
 		const contact = contactsArray[index];
 		if (contact.id === value.contactId) {
 			contactsArray.splice(Number(index), 1);
-			const unblockedContatcs = getUnblocked();
-			res.status(200).json({ unblockedContatcs });
+			const unblockedContacts = getUnblocked();
+			res.status(200).json({ unblockedContacts });
 			return;
 		}
 	}
 	res.status(404).json({ error: `No contact was found with id - ${contactId} ` });
 });
+
+// TO UPDATE A CONTACT
+router.patch('/:contactId', (req, res, _next) => {
+	const contactId: string = req.params.contactId;
+	const body = req.body;
+	const contact = contactsArray.find(contact => contact.id === contactId && !contact.isBlocked);
+
+	if (contact && body) {
+		contact.value.firstName = body.firstName || contact.value.firstName;
+		contact.value.lastName = body.lastName || contact.value.lastName;
+		contact.value.phone = body.phone || contact.value.phone;
+		contact.value.email = body.email || contact.value.email;
+		contact.isBlocked = body.isBlocked || contact.isBlocked;
+		res.status(200).json({ contact });
+		return;
+	}
+	res.status(404).json({ error: `No contact was found with id - ${contactId}, contact could have been be blocked` });
+});
+
 export default router;
