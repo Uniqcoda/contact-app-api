@@ -83,8 +83,8 @@ const idSchema = {
 
 // TO ADD A CONTACT
 router.post('/', (req, res, _next) => {
-	const contact = req.body;
-	const { error, value } = joi.validate<ICreateContact>(contact, schema, { abortEarly: false, stripUnknown: true });
+	const contact: ICreateContact = req.body;
+	const { error, value } = joi.validate(contact, schema, { abortEarly: false, stripUnknown: true });
 	if (error) {
 		res.status(400).json({ error });
 		return;
