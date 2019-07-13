@@ -152,7 +152,7 @@ For example
 DELETE /contacts/1
 ```
 
-Returns status code `200` if contact was successfully deleted. \
+Returns status code `200` if contact was successfully deleted, and an array of all contacts. \
 Returns status code `404` if contact was not found.
 
 ## 6. To block a contact by id

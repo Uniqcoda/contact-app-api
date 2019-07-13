@@ -38,8 +38,30 @@ const contact2: ICreateContactResponse = {
 		email: 'ochukoe@yah.com',
 	},
 };
+const contact3: ICreateContactResponse = {
+	id: '3',
+	createdAt: 'today',
+	isBlocked: true,
+	value: {
+		firstName: 'Izu',
+		lastName: 'Ogbodo',
+		phone: '+2348056431780',
+		email: 'izuo@yah.com',
+	},
+};
+const contact4: ICreateContactResponse = {
+	id: '4',
+	createdAt: 'today',
+	isBlocked: false,
+	value: {
+		firstName: 'Esty',
+		lastName: 'Ogundijo',
+		phone: '+2348056431780',
+		email: 'estyo@yah.com',
+	},
+};
 
-const contactsArray: ICreateContactResponse[] = [contact1, contact2];
+const contactsArray: ICreateContactResponse[] = [contact1, contact2, contact3, contact4];
 // the phone num should either start with country code or 0 (example +2348067546986, or 08067546986)
 const phoneNumRegex = /^(\+[0-9]{3}|0)[0-9]{10}$/;
 
@@ -76,9 +98,15 @@ router.post('/', (req, res, _next) => {
 	res.status(200).json({ data });
 });
 
-// TO READ ALL CONTACTS
+// A function that filters the contacts array for unblocked contacts
+function getUnblocked() {
+	return contactsArray.filter(contact => contact.isBlocked === false);
+}
+
+// TO GET ALL CONTACTS
 router.get('/', (_req, res, _next) => {
-	res.status(200).json(contactsArray);
+	const unblockedContatcs = getUnblocked();
+	res.status(200).json(unblockedContatcs);
 });
 
 //  TO GET A CONTACT BY ID
@@ -90,12 +118,12 @@ router.get('/:contactId', (req, res, _next) => {
 		return;
 	}
 
-	const data = contactsArray.find(contact => contact.id === value.contactId);
+	const data = contactsArray.find(contact => contact.id === value.contactId && !contact.isBlocked);
 	if (data) {
 		res.status(200).json({ data });
 		return;
 	}
-	res.status(404).json({ error: `No contact was found with id - ${contactId} ` });
+	res.status(404).json({ error: `No contact was found with id - ${contactId}, contact could be blocked` });
 });
 
 // TO DELETE A CONTACT BY ID
@@ -111,7 +139,8 @@ router.delete('/:contactId', (req, res, _next) => {
 		const contact = contactsArray[index];
 		if (contact.id === value.contactId) {
 			contactsArray.splice(Number(index), 1);
-			res.status(200).json({ contactsArray });
+			const unblockedContatcs = getUnblocked();
+			res.status(200).json({ unblockedContatcs });
 			return;
 		}
 	}
