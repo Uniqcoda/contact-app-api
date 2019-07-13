@@ -1,5 +1,7 @@
 import express from 'express';
-import { contactsArray } from './contacts';
+import joi from '@hapi/joi';
+
+import { contactsArray, idSchema } from './contacts';
 
 const router = express.Router();
 
@@ -16,6 +18,23 @@ router.get('/', (_req, res, _next) => {
 		return;
 	}
 	res.status(404).json({ error: `No blocked contacts.` });
+});
+
+// TO GET A BLOCKED CONTACT BY ID
+router.get('/:contactId', (req, res, _next) => {
+	const contactId: string = req.params.contactId;
+	const { error, value } = joi.validate({ contactId }, idSchema, { abortEarly: false, stripUnknown: true });
+	if (error) {
+		res.status(400).json({ error });
+		return;
+	}
+
+	const contact = contactsArray.find(contact => contact.id === value.contactId && contact.isBlocked);
+	if (contact) {
+		res.status(200).json({ contact });
+		return;
+	}
+	res.status(404).json({ error: `No blocked contact was found with id - ${contactId}` });
 });
 
 // TO UNBLOCK A CONTACT
