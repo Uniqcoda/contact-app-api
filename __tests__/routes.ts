@@ -75,10 +75,10 @@ let demoContact4 = { firstName: 'Dlamini', lastName: 'Fishbourn', phone: '+23480
 			});
 	});
 
-	test('/:contactId returns an error if there is no contact with the id', () => {
+	test('/contacts/:contactId returns an error if there is no contact with the id', () => {
 		return request(app)
-			.get('/contacts/1')
-			.expect(404, { error: 'No contact was found with id - 1, contact could be blocked' });
+			.get('/contacts/55')
+			.expect(404, { error: 'No contact was found with id - 55, contact could be blocked' });
 	});
 
 	// TO DELETE A CONTACT BY ID
