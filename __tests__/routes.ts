@@ -33,5 +33,14 @@ describe('API Routes', () => {
 			.get('/contacts/1')
 			.expect(404, { error: 'No contact was found with id - 1, contact could be blocked' });
 	});
+
+	// TO DELETE A CONTACT BY ID
+	// TO UPDATE A CONTACT
+
+  // TO VIEW ALL BLOCKED CONTACTS
+  test('/contacts returns all blocked contacts', () => {
+		return request(app)
+			.get('/blocked-contacts')
+			.expect(200, { blockedContacts: [] });
   });
 });
