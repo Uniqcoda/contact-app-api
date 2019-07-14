@@ -17,9 +17,28 @@ describe('API Routes', () => {
 		return request(app)
 			.post('/contacts')
 			.send(demoContact)
+			.set('Accept', 'application/json')
+			.expect('Content-Type', /json/)
 			.expect(200)
-			.expect(res => {
-        console.log(res.body);
+			.end((err, res) => {
+				if (err) return done(err);
+				console.log(res.body);
+				done();
+			});
+  });
+  
+  test('/contacts to add a contact with invalid or incomplete properties', done => {
+		let demoContact = {lastName: 'Ekrresa', phone: '+2348056431780', email: 'ochukoe@yah.com' };
+		return request(app)
+			.post('/contacts')
+			.send(demoContact)
+			.set('Accept', 'application/json')
+			.expect('Content-Type', /json/)
+			.expect(400)
+			.end((err, res) => {
+				if (err) return done(err);
+				console.log(res.body);
+				done();
 			});
 	});
 
