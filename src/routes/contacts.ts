@@ -71,7 +71,7 @@ function getUnblocked() {
 // the phone num should either start with country code or 0 (example +2348067546986, or 08067546986)
 const phoneNumRegex = /^(\+[0-9]{3}|0)[0-9]{10}$/;
 
-const schema = {
+const contactSchema = {
 	firstName: joi.string().required(),
 	lastName: joi.string().optional(),
 	phone: joi
@@ -90,7 +90,7 @@ export const idSchema = {
 // TO ADD A CONTACT
 router.post('/', (req, res, _next) => {
 	const contact: ICreateContact = req.body;
-	const { error, value } = joi.validate(contact, schema, { abortEarly: false, stripUnknown: true });
+	const { error, value } = joi.validate(contact, contactSchema, { abortEarly: false, stripUnknown: true });
 	if (error) {
 		res.status(400).json({ error });
 		return;
@@ -162,7 +162,10 @@ router.patch('/:contactId', (req, res, _next) => {
 		contact.value.lastName = body.lastName || contact.value.lastName;
 		contact.value.phone = body.phone || contact.value.phone;
 		contact.value.email = body.email || contact.value.email;
-		contact.isBlocked = body.isBlocked || contact.isBlocked;
+		// to block the contact
+		if (body.isBlocked) {
+			contact.isBlocked = true;
+		}
 		res.status(200).json({ contact });
 		return;
 	}
