@@ -11,12 +11,15 @@ describe('API Routes', () => {
 			.expect(200, { contacts: [] });
 	});
 
-  test('/home ', () => {
-    return request(app)
-      .post('/home')
-      .send({})
-      .expect(res => {
-        res.body;
-      });
+	//  TO GET A CONTACT BY ID
+	// test('/:contactId returns a contact by id', () =>{
+	//   return request(app).get('/contacts/1').expect(200, { contact: [] })
+	// })
+
+	test('/:contactId returns an error if there is no contact with the id', () => {
+		return request(app)
+			.get('/contacts/1')
+			.expect(404, { error: 'No contact was found with id - 1, contact could be blocked' });
+	});
   });
 });
