@@ -18,11 +18,33 @@ let demoContact4 = { firstName: 'Dlamini', lastName: 'Fishbourn', phone: '+23480
 		let demoContact = { firstName: 'Ochuko', lastName: 'Ekrresa', phone: '+2348056431780', email: 'ochukoe@yah.com' };
 		return request(app)
 			.post('/contacts')
-			.send(demoContact)
+			.send(demoContact1)
 			.set('Accept', 'application/json')
 			.expect('Content-Type', /json/)
 			.expect(200)
-			.end((err, res) => {
+			.expect(res => {
+				// console.log(res.body);
+				expect(res.body.newContact.value).toEqual(demoContact1);
+			});
+  });
+  
+	test('/contacts to confirm that a new contact can contain only first name and phone number', () => {
+		return request(app)
+			.post('/contacts')
+			.send(demoContact3)
+			.expect(200)
+			.expect(res => {
+				// console.log(res.body);
+				expect(res.body.newContact.value).toEqual(demoContact3);
+			});
+	});
+
+	test('/contacts will refuse to add a contact with invalid or incomplete properties', done => {
+		return request(app)
+			.post('/contacts')
+			.send(demoContact2)
+			.expect(400)
+			.end(err => {
 				if (err) return done(err);
 				console.log(res.body);
 				done();
