@@ -49,27 +49,31 @@ let demoContact4 = { firstName: 'Dlamini', lastName: 'Fishbourn', phone: '+23480
 				console.log(res.body);
 				done();
 			});
-  });
-  
-  test('/contacts to add a contact with invalid or incomplete properties', done => {
-		let demoContact = {lastName: 'Ekrresa', phone: '+2348056431780', email: 'ochukoe@yah.com' };
+	});
+
+	test('/contacts to add a contact', () => {
 		return request(app)
 			.post('/contacts')
-			.send(demoContact)
+			.send(demoContact4)
 			.set('Accept', 'application/json')
 			.expect('Content-Type', /json/)
-			.expect(400)
-			.end((err, res) => {
-				if (err) return done(err);
-				console.log(res.body);
-				done();
+			.expect(200)
+			.expect(res => {
+				// console.log(res.body);
+				expect(res.body.newContact.value).toEqual(demoContact4);
 			});
 	});
 
 	//  TO GET A CONTACT BY ID
-	// test('/:contactId returns a contact by id', () =>{
-	//   return request(app).get('/contacts/1').expect(200, { contact: [] })
-	// })
+	test('/contacts/:contactId returns a contact by id', () => {
+		return request(app)
+			.get('/contacts/2')
+			.expect(200)
+			.expect(res => {
+				// console.log(res.body);
+				expect(res.body.contact.id).toBe(2);
+			});
+	});
 
 	test('/:contactId returns an error if there is no contact with the id', () => {
 		return request(app)
