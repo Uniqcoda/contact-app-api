@@ -10,6 +10,10 @@ function getBlocked() {
 	return contactsArray.filter(contact => contact.isBlocked === true);
 }
 
+const schema = {
+	isBlocked: joi.boolean().required(),
+};
+
 // TO VIEW ALL BLOCKED CONTACTS
 router.get('/', (_req, res, _next) => {
 	const blockedContacts = getBlocked();
@@ -40,11 +44,16 @@ router.get('/:contactId', (req, res, _next) => {
 // TO UNBLOCK A CONTACT
 router.patch('/:contactId', (req, res, _next) => {
 	const contactId: string = req.params.contactId;
-	const body = req.body;
+	const isBlocked: boolean = req.body.isBlocked;
+	const { error, value } = joi.validate({ isBlocked }, schema, { abortEarly: false, stripUnknown: true });
+	if (error) {
+		res.status(400).json({ error });
+		return;
+	}
 
 	const contact = contactsArray.find(contact => contact.id === contactId && contact.isBlocked);
 
-	if (contact && body) {
+	if (contact && value) {
 		contact.isBlocked = false;
 		res.status(200).json({ contact });
 		return;
