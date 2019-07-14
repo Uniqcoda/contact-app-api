@@ -3,65 +3,21 @@ import joi from '@hapi/joi';
 
 const router = express.Router();
 
-interface ICreateContact {
+export interface ICreateContact {
 	firstName: string;
 	lastName: string;
 	phone: string;
 	email: string;
 }
 
-interface ICreateContactResponse {
+export interface ICreateContactResponse {
 	id: string; // the auto generated id of the new contact
 	createdAt: string; // the ISO date of when the contact was created
 	isBlocked: boolean;
 	value: ICreateContact;
 }
-const contact1: ICreateContactResponse = {
-	id: '1',
-	createdAt: 'today',
-	isBlocked: false,
-	value: {
-		firstName: 'Ochuko',
-		lastName: 'Ekrresa',
-		phone: '+2348056431780',
-		email: 'ochukoe@yah.com',
-	},
-};
-const contact2: ICreateContactResponse = {
-	id: '2',
-	createdAt: 'today',
-	isBlocked: true,
-	value: {
-		firstName: 'Ochuko',
-		lastName: 'Ekrresa',
-		phone: '+2348056431780',
-		email: 'ochukoe@yah.com',
-	},
-};
-const contact3: ICreateContactResponse = {
-	id: '3',
-	createdAt: 'today',
-	isBlocked: true,
-	value: {
-		firstName: 'Izu',
-		lastName: 'Ogbodo',
-		phone: '+2348056431780',
-		email: 'izuo@yah.com',
-	},
-};
-const contact4: ICreateContactResponse = {
-	id: '4',
-	createdAt: 'today',
-	isBlocked: false,
-	value: {
-		firstName: 'Esty',
-		lastName: 'Ogundijo',
-		phone: '+2348056431780',
-		email: 'estyo@yah.com',
-	},
-};
 
-export const contactsArray: ICreateContactResponse[] = [contact1, contact2, contact3, contact4];
+export const contactsArray: ICreateContactResponse[] = [];
 
 // A function that filters the contacts array for unblocked contacts
 function getUnblocked() {
@@ -106,11 +62,10 @@ router.post('/', (req, res, _next) => {
 // TO GET ALL CONTACTS
 router.get('/', (_req, res, _next) => {
 	const contacts = getUnblocked();
-	if (contacts.length) {
+	if (contacts) {
 		res.status(200).json({ contacts });
 		return;
 	}
-	res.status(404).json({ error: `No contacts available, also check your blocked contacts.` });
 });
 
 //  TO GET A CONTACT BY ID

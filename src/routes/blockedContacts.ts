@@ -17,11 +17,10 @@ const schema = {
 // TO VIEW ALL BLOCKED CONTACTS
 router.get('/', (_req, res, _next) => {
 	const blockedContacts = getBlocked();
-	if (blockedContacts.length) {
+	if (blockedContacts) {
 		res.status(200).json({ blockedContacts });
 		return;
 	}
-	res.status(404).json({ error: `No blocked contacts.` });
 });
 
 // TO GET A BLOCKED CONTACT BY ID
