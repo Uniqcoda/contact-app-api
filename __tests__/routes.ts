@@ -11,6 +11,18 @@ describe('API Routes', () => {
 			.expect(200, { contacts: [] });
 	});
 
+	// TO ADD A CONTACT
+	test('/contacts to add a contact', () => {
+		let demoContact = { firstName: 'Ochuko', lastName: 'Ekrresa', phone: '+2348056431780', email: 'ochukoe@yah.com' };
+		return request(app)
+			.post('/contacts')
+			.send(demoContact)
+			.expect(200)
+			.expect(res => {
+        console.log(res.body);
+			});
+	});
+
 	//  TO GET A CONTACT BY ID
 	// test('/:contactId returns a contact by id', () =>{
 	//   return request(app).get('/contacts/1').expect(200, { contact: [] })
