@@ -1,8 +1,10 @@
 import request from 'supertest';
 import app from '../src/app';
 
-describe('API Routes', () => {
-	// TO ADD A CONTACT
+let demoContact1 = { firstName: 'Ochuko', lastName: 'Ekrresa', phone: '+2348056431780', email: 'ochukoe@yah.com' };
+let demoContact2 = { lastName: 'Ekrresa', phone: '+2348056431780', email: 'ochukoe@yah.com' };
+let demoContact3 = { firstName: 'Jane', phone: '+2348056431780' };
+let demoContact4 = { firstName: 'Dlamini', lastName: 'Fishbourn', phone: '+2348056431780', email: 'ochukoe@yah.com' };
 
 	// TO GET ALL CONTACTS
 	test('/contacts returns all non-blocked contacts', () => {
