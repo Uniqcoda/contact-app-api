@@ -9,15 +9,19 @@ export interface ICreateContact {
 	phone: string;
 	email: string;
 }
-
 export interface ICreateContactResponse {
-	id: string; // the auto generated id of the new contact
+	id: number; // the auto generated id of the new contact
 	createdAt: string; // the ISO date of when the contact was created
 	isBlocked: boolean;
 	value: ICreateContact;
 }
 
 export const contactsArray: ICreateContactResponse[] = [];
+// id generator
+function idGenerator() {
+	const newId = contactsArray.length ? contactsArray[contactsArray.length - 1].id + 1 : 1;
+	return newId;
+}
 
 // A function that filters the contacts array for unblocked contacts
 function getUnblocked() {
@@ -40,7 +44,7 @@ const contactSchema = {
 		.email(),
 };
 export const idSchema = {
-	contactId: joi.string().required(),
+	contactId: joi.number().required(),
 };
 
 // TO ADD A CONTACT
@@ -51,7 +55,7 @@ router.post('/', (req, res, _next) => {
 		res.status(400).json({ error });
 		return;
 	}
-	const id = new Date().getTime().toString();
+	const id = idGenerator();
 	const createdAt = new Date().toLocaleDateString();
 	const isBlocked = false;
 	const newContact = { id, createdAt, isBlocked, value };
@@ -70,14 +74,14 @@ router.get('/', (_req, res, _next) => {
 
 //  TO GET A CONTACT BY ID
 router.get('/:contactId', (req, res, _next) => {
-	const contactId: string = req.params.contactId;
-	const { error, value } = joi.validate({ contactId }, idSchema, { abortEarly: false, stripUnknown: true });
+	const contactId: number = Number(req.params.contactId);
+	const { error } = joi.validate({ contactId }, idSchema, { abortEarly: false, stripUnknown: true });
 	if (error) {
 		res.status(400).json({ error });
 		return;
 	}
 
-	const contact = contactsArray.find(contact => contact.id === value.contactId && !contact.isBlocked);
+	const contact = contactsArray.find(contact => contact.id === contactId && !contact.isBlocked);
 	if (contact) {
 		res.status(200).json({ contact });
 		return;
@@ -87,8 +91,8 @@ router.get('/:contactId', (req, res, _next) => {
 
 // TO DELETE A CONTACT BY ID
 router.delete('/:contactId', (req, res, _next) => {
-	const contactId: string = req.params.contactId;
-	const { error, value } = joi.validate({ contactId }, idSchema, { abortEarly: false, stripUnknown: true });
+	const contactId: number = Number(req.params.contactId);
+	const { error } = joi.validate({ contactId }, idSchema, { abortEarly: false, stripUnknown: true });
 	if (error) {
 		res.status(400).json({ error });
 		return;
@@ -96,10 +100,10 @@ router.delete('/:contactId', (req, res, _next) => {
 
 	for (const index in contactsArray) {
 		const contact = contactsArray[index];
-		if (contact.id === value.contactId) {
+		if (contact.id === contactId) {
 			contactsArray.splice(Number(index), 1);
-			const unblockedContacts = getUnblocked();
-			res.status(200).json({ unblockedContacts });
+			const contacts = getUnblocked();
+			res.status(200).json({ contacts });
 			return;
 		}
 	}
@@ -108,8 +112,25 @@ router.delete('/:contactId', (req, res, _next) => {
 
 // TO UPDATE A CONTACT
 router.patch('/:contactId', (req, res, _next) => {
-	const contactId: string = req.params.contactId;
-	const body = req.body;
+	const contactId: number = Number(req.params.contactId);
+  const body = req.body;
+  // validate update email
+	if (body.email) {
+		const { error } = joi.validate(body.email, contactSchema.email, { abortEarly: false, stripUnknown: true });
+		if (error) {
+			res.status(400).json({ error });
+			return;
+		}
+  }
+  //validate update phone number
+	if (body.phone) {
+		const { error } = joi.validate(body.phone, contactSchema.phone, { abortEarly: false, stripUnknown: true });
+		if (error) {
+			res.status(400).json({ error });
+			return;
+		}
+  }
+  // confirm that contact with id exists
 	const contact = contactsArray.find(contact => contact.id === contactId && !contact.isBlocked);
 
 	if (contact && body) {

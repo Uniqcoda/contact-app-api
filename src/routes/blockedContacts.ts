@@ -25,14 +25,14 @@ router.get('/', (_req, res, _next) => {
 
 // TO GET A BLOCKED CONTACT BY ID
 router.get('/:contactId', (req, res, _next) => {
-	const contactId: string = req.params.contactId;
-	const { error, value } = joi.validate({ contactId }, idSchema, { abortEarly: false, stripUnknown: true });
+	const contactId: number = Number(req.params.contactId);
+	const { error } = joi.validate({ contactId }, idSchema, { abortEarly: false, stripUnknown: true });
 	if (error) {
 		res.status(400).json({ error });
 		return;
 	}
 
-	const contact = contactsArray.find(contact => contact.id === value.contactId && contact.isBlocked);
+	const contact = contactsArray.find(contact => contact.id === contactId && contact.isBlocked);
 	if (contact) {
 		res.status(200).json({ contact });
 		return;
@@ -42,7 +42,7 @@ router.get('/:contactId', (req, res, _next) => {
 
 // TO UNBLOCK A CONTACT
 router.patch('/:contactId', (req, res, _next) => {
-	const contactId: string = req.params.contactId;
+	const contactId: number = Number(req.params.contactId);
 	const isBlocked: boolean = req.body.isBlocked;
 	const { error, value } = joi.validate({ isBlocked }, schema, { abortEarly: false, stripUnknown: true });
 	if (error) {
