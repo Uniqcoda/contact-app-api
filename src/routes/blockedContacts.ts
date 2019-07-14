@@ -13,7 +13,7 @@ function getBlocked() {
 // TO VIEW ALL BLOCKED CONTACTS
 router.get('/', (_req, res, _next) => {
 	const blockedContacts = getBlocked();
-	if (blockedContacts) {
+	if (blockedContacts.length) {
 		res.status(200).json({ blockedContacts });
 		return;
 	}

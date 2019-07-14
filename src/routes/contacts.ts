@@ -106,7 +106,7 @@ router.post('/', (req, res, _next) => {
 // TO GET ALL CONTACTS
 router.get('/', (_req, res, _next) => {
 	const contacts = getUnblocked();
-	if (contacts) {
+	if (contacts.length) {
 		res.status(200).json({ contacts });
 		return;
 	}
