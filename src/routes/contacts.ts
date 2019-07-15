@@ -9,6 +9,15 @@ export interface ICreateContact {
 	phone: string;
 	email: string;
 }
+
+interface IUpdateContact {
+	isBlocked: boolean;
+	firstName: string;
+	lastName: string;
+	phone: string;
+	email: string;
+}
+
 export interface ICreateContactResponse {
 	id: number; // the auto generated id of the new contact
 	createdAt: string; // the ISO date of when the contact was created
