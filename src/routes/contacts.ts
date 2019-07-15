@@ -40,6 +40,7 @@ function getUnblocked() {
 // the phone num should either start with country code or 0 (example +2348067546986, or 08067546986)
 const phoneNumRegex = /^(\+[0-9]{3}|0)[0-9]{10}$/;
 
+// a schema that describes the contact object
 const contactSchema = {
 	firstName: joi.string().required(),
 	lastName: joi.string().optional(),
@@ -84,7 +85,7 @@ router.post('/', (req, res, _next) => {
 	}
 
 	const id = idGenerator();
-	const createdAt = new Date().toLocaleDateString();
+	const createdAt = new Date().toISOString();
 	const isBlocked = false;
 	const newContact = { id, createdAt, isBlocked, value };
 	contactsArray.push(newContact);
