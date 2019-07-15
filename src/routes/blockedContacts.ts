@@ -17,16 +17,17 @@ const schema = {
 // TO VIEW ALL BLOCKED CONTACTS
 router.get('/', (_req, res, _next) => {
 	const blockedContacts = getBlocked();
-	if (blockedContacts) {
-		res.status(200).json({ blockedContacts });
-		return;
-	}
+
+	res.status(200).json({ blockedContacts });
 });
 
 // TO GET A BLOCKED CONTACT BY ID
 router.get('/:contactId', (req, res, _next) => {
-	const contactId: number = Number(req.params.contactId);
-	const { error } = joi.validate({ contactId }, idSchema, { abortEarly: false, stripUnknown: true });
+	const {
+		error,
+		value: { contactId },
+	} = joi.validate<{ contactId: number }>(req.params, idSchema, { abortEarly: false, stripUnknown: true });
+
 	if (error) {
 		res.status(400).json({ error });
 		return;
@@ -42,7 +43,7 @@ router.get('/:contactId', (req, res, _next) => {
 
 // TO UNBLOCK A CONTACT
 router.patch('/:contactId', (req, res, _next) => {
-	const contactId: number = Number(req.params.contactId);
+	const contactId = Number(req.params.contactId);
 	const isBlocked: boolean = req.body.isBlocked;
 	const { error, value } = joi.validate({ isBlocked }, schema, { abortEarly: false, stripUnknown: true });
 	if (error) {

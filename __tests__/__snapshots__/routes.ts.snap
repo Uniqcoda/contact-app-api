@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`API Routes /contacts will refuse to add a contact with invalid or incomplete properties 1`] = `
+Object {
+  "error": Object {
+    "_object": Object {
+      "email": "ochukoe@yah.com",
+      "lastName": "Ekrresa",
+      "phone": "+2348056431780",
+    },
+    "details": Array [
+      Object {
+        "context": Object {
+          "key": "firstName",
+          "label": "firstName",
+        },
+        "message": "\\"firstName\\" is required",
+        "path": Array [
+          "firstName",
+        ],
+        "type": "any.required",
+      },
+    ],
+    "isJoi": true,
+    "name": "ValidationError",
+  },
+}
+`;

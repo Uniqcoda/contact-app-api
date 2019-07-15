@@ -2,10 +2,10 @@ import request from 'supertest';
 import app from '../src/app';
 // import { ICreateContact, ICreateContactResponse } from '../src/routes/contacts';
 
-let demoContact1 = { firstName: 'Ochuko', lastName: 'Ekrresa', phone: '+2348056431780', email: 'ochukoe@yah.com' };
-let demoContact2 = { lastName: 'Ekrresa', phone: '+2348056431780', email: 'ochukoe@yah.com' };
-let demoContact3 = { firstName: 'Jane', phone: '+2348056431780' };
-let demoContact4 = { firstName: 'Dlamini', lastName: 'Fishbourn', phone: '+2348056431780', email: 'ochukoe@yah.com' };
+const demoContact1 = { firstName: 'Ochuko', lastName: 'Ekrresa', phone: '+2348056431780', email: 'ochukoe@yah.com' };
+const demoContact2 = { lastName: 'Ekrresa', phone: '+2348056431780', email: 'ochukoe@yah.com' };
+const demoContact3 = { firstName: 'Jane', phone: '+2348056431780' };
+const demoContact4 = { firstName: 'Dlamini', lastName: 'Fishbourn', phone: '+2348056431780', email: 'ochukoe@yah.com' };
 
 describe('API Routes', () => {
 	// TO GET ALL CONTACTS
@@ -14,7 +14,7 @@ describe('API Routes', () => {
 			.get('/contacts')
 			.expect('Content-Type', /json/)
 			.expect(200, { contacts: [] });
-  });
+	});
 
 
 	// TO ADD A CONTACT
@@ -42,7 +42,7 @@ describe('API Routes', () => {
 			});
 	});
 
-	test('/contacts will refuse to add a contact with invalid or incomplete properties', done => {
+	test('/contacts will refuse to add a contact with invalid or incomplete properties', () => {
 		return request(app)
 			.post('/contacts')
 			.send(demoContact2)
@@ -53,7 +53,7 @@ describe('API Routes', () => {
 			});
 	});
 
-	test('/contacts to add a contact', () => {
+	test('/contacts to add another contact', () => {
 		return request(app)
 			.post('/contacts')
 			.send(demoContact4)
@@ -63,6 +63,7 @@ describe('API Routes', () => {
 			.expect(res => {
 				// console.log(res.body);
 				expect(res.body.newContact.value).toEqual(demoContact4);
+				expect(res.body.newContact.id).toBe(3);
 			});
 	});
 
@@ -137,8 +138,8 @@ describe('API Routes', () => {
 				// console.log(res.body);
 				expect(res.body.contact.isBlocked).toBe(true);
 			});
-  });
-  
+	});
+
 	// TO UNBLOCK A CONTACT
 	test('/contacts/:contactId can block a contact by id', () => {
 		return request(app)
