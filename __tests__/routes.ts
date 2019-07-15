@@ -16,7 +16,6 @@ describe('API Routes', () => {
 			.expect(200, { contacts: [] });
 	});
 
-
 	// TO ADD A CONTACT
 	test('/contacts to add a contact', () => {
 		return request(app)
@@ -28,6 +27,7 @@ describe('API Routes', () => {
 			.expect(res => {
 				// console.log(res.body);
 				expect(res.body.newContact.value).toEqual(demoContact1);
+				expect(res.body.newContact.id).toStrictEqual(expect.any(Number));
 			});
 	});
 
@@ -35,6 +35,8 @@ describe('API Routes', () => {
 		return request(app)
 			.post('/contacts')
 			.send(demoContact3)
+			.set('Accept', 'application/json')
+			.expect('Content-Type', /json/)
 			.expect(200)
 			.expect(res => {
 				// console.log(res.body);
@@ -46,10 +48,11 @@ describe('API Routes', () => {
 		return request(app)
 			.post('/contacts')
 			.send(demoContact2)
+			.set('Accept', 'application/json')
+			.expect('Content-Type', /json/)
 			.expect(400)
-			.end(err => {
-				if (err) return done(err);
-				done();
+			.expect(res => {
+				expect(res.body).toMatchSnapshot();
 			});
 	});
 
