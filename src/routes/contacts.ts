@@ -64,22 +64,31 @@ const updateContactontactSchema = {
 
 // a schema that describes the contact id
 export const idSchema = {
-	contactId: joi.number().required(),
+	contactId: joi
+		.number()
+		.integer()
+		.required(),
 };
 
 // TO ADD A CONTACT
 router.post('/', (req, res, _next) => {
-	const contact: ICreateContact = req.body;
-	const { error, value } = joi.validate(contact, contactSchema, { abortEarly: false, stripUnknown: true });
+	const { error, value } = joi.validate<ICreateContact>(req.body, contactSchema, {
+		abortEarly: false,
+		stripUnknown: true,
+	});
+
 	if (error) {
 		res.status(400).json({ error });
+
 		return;
 	}
+
 	const id = idGenerator();
 	const createdAt = new Date().toLocaleDateString();
 	const isBlocked = false;
 	const newContact = { id, createdAt, isBlocked, value };
 	contactsArray.push(newContact);
+
 	res.status(200).json({ newContact });
 });
 
@@ -94,8 +103,11 @@ router.get('/', (_req, res, _next) => {
 
 //  TO GET A CONTACT BY ID
 router.get('/:contactId', (req, res, _next) => {
-	const contactId: number = Number(req.params.contactId);
-	const { error } = joi.validate({ contactId }, idSchema, { abortEarly: false, stripUnknown: true });
+	const {
+		error,
+		value: { contactId },
+	} = joi.validate<{ contactId: number }>(req.params, idSchema, { abortEarly: false, stripUnknown: true });
+
 	if (error) {
 		res.status(400).json({ error });
 		return;
@@ -111,8 +123,11 @@ router.get('/:contactId', (req, res, _next) => {
 
 // TO DELETE A CONTACT BY ID
 router.delete('/:contactId', (req, res, _next) => {
-	const contactId: number = Number(req.params.contactId);
-	const { error } = joi.validate({ contactId }, idSchema, { abortEarly: false, stripUnknown: true });
+	const {
+		error,
+		value: { contactId },
+	} = joi.validate<{ contactId: number }>(req.params, idSchema, { abortEarly: false, stripUnknown: true });
+
 	if (error) {
 		res.status(400).json({ error });
 		return;
