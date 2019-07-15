@@ -52,6 +52,17 @@ const contactSchema = {
 		.optional()
 		.email(),
 };
+
+// a schema that describes the update contact object
+const updateContactontactSchema = {
+	firstName: joi.string(),
+	lastName: joi.string(),
+	phone: joi.string().regex(phoneNumRegex),
+	email: joi.string().email(),
+	isBlocked: joi.boolean(),
+};
+
+// a schema that describes the contact id
 export const idSchema = {
 	contactId: joi.number().required(),
 };
