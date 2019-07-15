@@ -105,4 +105,17 @@ describe('API Routes', () => {
 			});
 	});
 
+	// TO BLOCK A CONTACT BY ID
+	test('/contacts/:contactId can block a contact by id', () => {
+		return request(app)
+			.patch('/contacts/3')
+			.send({ isBlocked: true })
+			.expect(200)
+			.expect(res => {
+				// console.log(res.body);
+				expect(res.body.contact.isBlocked).toBe(true);
+			});
+	});
+
+
 });
