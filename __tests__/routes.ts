@@ -139,5 +139,15 @@ describe('API Routes', () => {
 			});
   });
   
-
+	// TO UNBLOCK A CONTACT
+	test('/contacts/:contactId can block a contact by id', () => {
+		return request(app)
+			.patch('/blocked-contacts/3')
+			.send({ isBlocked: true })
+			.expect(200)
+			.expect(res => {
+				// console.log(res.body);
+				expect(res.body.contact.isBlocked).toBe(false);
+			});
+	});
 });
