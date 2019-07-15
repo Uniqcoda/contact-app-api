@@ -1,21 +1,24 @@
 import request from 'supertest';
 import app from '../src/app';
+// import { ICreateContact, ICreateContactResponse } from '../src/routes/contacts';
 
 let demoContact1 = { firstName: 'Ochuko', lastName: 'Ekrresa', phone: '+2348056431780', email: 'ochukoe@yah.com' };
 let demoContact2 = { lastName: 'Ekrresa', phone: '+2348056431780', email: 'ochukoe@yah.com' };
 let demoContact3 = { firstName: 'Jane', phone: '+2348056431780' };
 let demoContact4 = { firstName: 'Dlamini', lastName: 'Fishbourn', phone: '+2348056431780', email: 'ochukoe@yah.com' };
 
+describe('API Routes', () => {
 	// TO GET ALL CONTACTS
 	test('/contacts returns all non-blocked contacts', () => {
 		return request(app)
 			.get('/contacts')
+			.expect('Content-Type', /json/)
 			.expect(200, { contacts: [] });
-	});
+  });
+
 
 	// TO ADD A CONTACT
 	test('/contacts to add a contact', () => {
-		let demoContact = { firstName: 'Ochuko', lastName: 'Ekrresa', phone: '+2348056431780', email: 'ochukoe@yah.com' };
 		return request(app)
 			.post('/contacts')
 			.send(demoContact1)
@@ -26,8 +29,8 @@ let demoContact4 = { firstName: 'Dlamini', lastName: 'Fishbourn', phone: '+23480
 				// console.log(res.body);
 				expect(res.body.newContact.value).toEqual(demoContact1);
 			});
-  });
-  
+	});
+
 	test('/contacts to confirm that a new contact can contain only first name and phone number', () => {
 		return request(app)
 			.post('/contacts')
@@ -46,7 +49,6 @@ let demoContact4 = { firstName: 'Dlamini', lastName: 'Fishbourn', phone: '+23480
 			.expect(400)
 			.end(err => {
 				if (err) return done(err);
-				console.log(res.body);
 				done();
 			});
 	});
@@ -82,12 +84,13 @@ let demoContact4 = { firstName: 'Dlamini', lastName: 'Fishbourn', phone: '+23480
 	});
 
 	// TO DELETE A CONTACT BY ID
-	// TO UPDATE A CONTACT
-
-  // TO VIEW ALL BLOCKED CONTACTS
-  test('/contacts returns all blocked contacts', () => {
+	test('/:contactId deletes a contact by id', () => {
 		return request(app)
-			.get('/blocked-contacts')
-			.expect(200, { blockedContacts: [] });
-  });
+			.delete('/contacts/1')
+			.expect(200)
+			.expect(res => {
+				expect(res.body.contacts.length).toBe(2);
+			});
+	});
+
 });
