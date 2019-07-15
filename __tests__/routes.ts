@@ -117,5 +117,15 @@ describe('API Routes', () => {
 			});
 	});
 
+	// TO VIEW ALL BLOCKED CONTACTS
+	test('/contacts returns all blocked contacts', () => {
+		return request(app)
+			.get('/blocked-contacts')
+			.expect(200)
+			.expect(res => {
+				// console.log(res.body);
+				expect(res.body.blockedContacts.length).toBe(1);
+			});
+	});
 
 });
