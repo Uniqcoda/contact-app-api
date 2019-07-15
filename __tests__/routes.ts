@@ -93,4 +93,16 @@ describe('API Routes', () => {
 			});
 	});
 
+	// TO UPDATE A CONTACT BY ID
+	test('/contacts/:contactId updates a contact by id', () => {
+		return request(app)
+			.patch('/contacts/2')
+			.send({ lastName: 'Ogundipe' })
+			.expect(200)
+			.expect(res => {
+				expect(res.body.contact.value.lastName).toBe('Ogundipe');
+				// console.log(res.body);
+			});
+	});
+
 });
