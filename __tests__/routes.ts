@@ -128,4 +128,16 @@ describe('API Routes', () => {
 			});
 	});
 
+	// TO GET A BLOCKED CONTACT BY ID
+	test('/blocked-contacts/:contactId returns a blocked contact by id', () => {
+		return request(app)
+			.get('/blocked-contacts/3')
+			.expect(200)
+			.expect(res => {
+				// console.log(res.body);
+				expect(res.body.contact.isBlocked).toBe(true);
+			});
+  });
+  
+
 });
