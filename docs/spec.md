@@ -12,7 +12,7 @@ Returns status code `200` with the data,
 [
 	{
 		"id": "1",
-		"createdAt": "today",
+		"createdAt": "2019-07-15T22:04:47.915Z",
 		"isBlocked": false,
 		"value": {
 			"firstName": "Ochuko",
@@ -23,7 +23,7 @@ Returns status code `200` with the data,
 	},
 	{
 		"id": "2",
-		"createdAt": "today",
+		"createdAt": "2015-07-05T22:04:47.915Z",
 		"isBlocked": false,
 		"value": {
 			"firstName": "Dan",
@@ -54,7 +54,7 @@ Returns status code `200` with the data below, if the contact was found and the 
 ```json
 {
 	"id": "1",
-	"createdAt": "today",
+	"createdAt": "2019-07-15T22:04:47.915Z",
 	"isBlocked": false,
 	"value": {
 		"firstName": "Ochuko",
@@ -77,10 +77,10 @@ The request body should be in the format,
 
 ```ts
 interface ICreateContact {
-	firstName: string;
-	lastName?: string;
-	phone: string; //This should be of the international format
-	email?: string;
+	firstName: string; //required
+	lastName?: string; //required
+	phone: string; // required. This should be of the international format
+	email?: string; // optional, must meet email standard
 }
 ```
 
@@ -104,7 +104,7 @@ interface ICreateContactResponse {
 	id: string; // the auto generated id of the new contact
 	createdAt: string; // the ISO date of when the contact was created
 	isBlocked: boolean;
-	value: ICreateContact;
+	value: ICreateContact; // this is an object containing the contact object that was sent
 }
 ```
 
@@ -124,7 +124,7 @@ The request body should be in the format below, with one or more of these proper
 	lastName?: string;
 	phone?: string;
 	email?: string;
-	block?: boolean;
+	isBlocked?: boolean;
 }
 ```
 
@@ -144,7 +144,7 @@ PATCH /contacts/3
 To block the Bill Gates contact
 
 ```json
-{ "block": true }
+{ "isBlocked": true }
 ```
 
 Returns status code `200` if contact was successfully updated. \
@@ -160,36 +160,38 @@ For example
 DELETE /contacts/1
 ```
 
-Returns status code `200` if contact was successfully deleted, and an array of all contacts that are not blocked. \
+Returns status code `200` if contact was successfully deleted, and an array of all remaining contacts that are not blocked. \
 Returns status code `404` if contact was not found.
-
 
 ## 6. To view all blocked contacts
 
 ```
-GET /contacts/blocked
+GET /blocked-contacts
 ```
 
-Returns status code `200` with the data
+Returns status code `200` with the data in the format below
 
 ```json
 [
-{
-    "firstName": "Melinda",
-    "lastName": "Gates",
-    "phone": "+234701008173",
-    "email": "melindag@yah.com",
-    "isBlocked": false,
-    "id": 3,
-},
-  ...,
+	{
+		"id": 4,
+		"createdAt": "2019-07-15T22:04:47.915Z",
+		"isBlocked": false,
+		"value": {
+			"firstName": "Destiny",
+			"lastName": "Dwayne",
+			"phone": "+2661054635588",
+			"email": "ddestiny@ymail.com"
+		}
+	},
+	...,
 ]
 ```
 
 ## 7. To unblock a contact by id
 
 ```
-PATCH /contacts/:contactID
+PATCH /blocked-contacts/:contactID
 ```
 
 The request body should be the the format below, with the `isBlocked` property set to `false`
@@ -203,7 +205,7 @@ The request body should be the the format below, with the `isBlocked` property s
 For example, to unblock the Bill Gates contact,
 
 ```
-PATCH /contacts/3
+PATCH /contacts/4
 ```
 
 ```json

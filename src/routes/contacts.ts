@@ -184,14 +184,12 @@ router.patch('/:contactId', (req, res, _next) => {
     // to block the contact
 		if (value.isBlocked) {
       contact.isBlocked = true;
-		}
-    // delete value.isBlocked;
-		// const updatedContact = { ...contact.value, ...value };
-		contact.value.firstName = value.firstName || contact.value.firstName;
-		contact.value.lastName = value.lastName || contact.value.lastName;
-		contact.value.phone = value.phone || contact.value.phone;
-		contact.value.email = value.email || contact.value.email;
-    // res.status(200).json({ updatedContact });
+    }
+    
+    // delete the isBlocked property so we can have an object that can be spread into the old contact value
+    delete value.isBlocked;
+    const newValue = { ...contact.value, ...value }
+    contact.value = newValue
 		res.status(200).json({ contact });
     
 		return;

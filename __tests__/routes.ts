@@ -144,10 +144,10 @@ describe('API Routes', () => {
 	});
 
 	// TO UNBLOCK A CONTACT
-	test('/contacts/:contactId can block a contact by id', () => {
+	test('/contacts/:contactId can unblock a contact by id', () => {
 		return request(app)
 			.patch('/blocked-contacts/3')
-			.send({ isBlocked: true })
+			.send({ isBlocked: false })
 			.expect(200)
 			.expect(res => {
 				// console.log(res.body);
