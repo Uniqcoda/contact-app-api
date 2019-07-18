@@ -3,6 +3,8 @@ import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
+import cors from 'cors';
+import mongoose from 'mongoose';
 
 import contactRouter from './routes/contacts';
 import blockedContactRouter from './routes/blockedContacts';
@@ -15,11 +17,19 @@ const app = express();
 app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'pug');
 
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
+
+const uri = 'mongodb+srv://uniqcoda:uniqcoda@marydb-t5zen.gcp.mongodb.net/test?retryWrites=true&w=majority';
+mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true });
+const connection = mongoose.connection;
+connection.once('open', ()=> {
+	console.log('MongoDB database connection established successfully');
+})
 
 app.use('/contacts', contactRouter);
 app.use('/blocked-contacts', blockedContactRouter);

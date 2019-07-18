@@ -97,6 +97,12 @@ describe('API Routes', () => {
 			});
 	});
 
+	test('/:contactId returns error message if id is invalid, for delete method', () => {
+		return request(app)
+			.delete('/contacts/ujfkoslks')
+			.expect(400)
+			});
+
 	// TO UPDATE A CONTACT BY ID
 	test('/contacts/:contactId updates a contact by id', () => {
 		return request(app)
