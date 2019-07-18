@@ -83,10 +83,14 @@ export const idSchema = {
 
 // TO ADD A CONTACT
 router.post('/', (req, res, _next) => {
-	const { error, value } = joi.validate<ICreateContact>(req.body, contactSchema, {
-		abortEarly: false,
-		stripUnknown: true,
-	});
+	const { error, value } = joi.validate(
+		req.body,
+		{ ...contactSchema },
+		{
+			abortEarly: false,
+			stripUnknown: true,
+		}
+	);
 
 	if (error) {
 		res.status(400).json({ error });
@@ -94,13 +98,12 @@ router.post('/', (req, res, _next) => {
 		return;
 	}
 
-	const id = idGenerator();
-	const createdAt = new Date().toISOString();
-	const isBlocked = false;
-	const newContact = { id, createdAt, isBlocked, value };
-	contactsArray.push(newContact);
+	const newContact = new Contact({ ...value });
 
-	res.status(200).json({ newContact });
+	newContact
+		.save()
+		.then(() => res.status(200).json({ message: 'Contact created successfully', newContact: newContact }))
+		.catch(err => res.status(400).json(`Error: ${err}`));
 });
 
 // TO GET ALL CONTACTS
