@@ -108,8 +108,8 @@ router.post('/', (req, res, _next) => {
 
 // TO GET ALL CONTACTS
 router.get('/', (_req, res, _next) => {
-	Contact.find()
-		.then(contacts => res.status(200).json(contacts))
+	Contact.find({ isBlocked: false })
+		.then(contacts => res.status(200).json({ contacts: contacts }))
 		.catch(err => res.status(400).json(`Error: ${err}`));
 });
 
