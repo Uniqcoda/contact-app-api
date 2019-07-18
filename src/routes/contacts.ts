@@ -1,5 +1,6 @@
 import express from 'express';
 import joi from '@hapi/joi';
+import { Contact } from '../models/contacts.model';
 
 const router = express.Router();
 
@@ -104,9 +105,9 @@ router.post('/', (req, res, _next) => {
 
 // TO GET ALL CONTACTS
 router.get('/', (_req, res, _next) => {
-	const contacts = getUnblocked();
-
-	res.status(200).json({ contacts });
+	Contact.find()
+		.then(contacts => res.status(200).json(contacts))
+		.catch(err => res.status(400).json(`Error: ${err}`));
 });
 
 //  TO GET A CONTACT BY ID
@@ -188,7 +189,6 @@ router.patch('/:contactId', (req, res, _next) => {
 	// confirm that contact with id exists
 	const contact = contactsArray.find(contact => contact.id === contactId && !contact.isBlocked);
 
-  
 	if (contact && value) {
 		// to block the contact
 		if (value.isBlocked) {
