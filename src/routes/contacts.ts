@@ -115,26 +115,9 @@ router.get('/', (_req, res, _next) => {
 
 //  TO GET A CONTACT BY ID
 router.get('/:contactId', (req, res, _next) => {
-	const {
-		error,
-		value: { contactId },
-	} = joi.validate<{ contactId: number }>(req.params, idSchema, { abortEarly: false, stripUnknown: true });
-
-	if (error) {
-		res.status(400).json({ error });
-
-		return;
-	}
-
-	const contact = contactsArray.find(contact => contact.id === contactId && !contact.isBlocked);
-
-	if (!contact) {
-		res.status(404).json({ error: `No contact was found with id - ${contactId}, contact could be blocked` });
-
-		return;
-	}
-
-	res.status(200).json({ contact });
+	Contact.findById(req.params.contactId)
+		.then(contact => res.status(200).json({ contact: contact }))
+		.catch(err => res.status(400).json(`${err}`));
 });
 
 // TO DELETE A CONTACT BY ID
