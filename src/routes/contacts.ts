@@ -42,20 +42,29 @@ const phoneNumRegex = /^(\+[0-9]{3}|0)[0-9]{10}$/;
 
 // a schema that describes the contact object
 const contactSchema = {
-	firstName: joi.string().required(),
-	lastName: joi.string().optional(),
+	firstName: joi
+		.string()
+		.trim()
+		.required(),
+	lastName: joi
+		.string()
+		.trim()
+		.optional(),
 	phone: joi
 		.string()
 		.required()
+		.trim()
 		.regex(phoneNumRegex),
 	email: joi
 		.string()
 		.optional()
+		.lowercase()
+		.trim()
 		.email(),
 };
 
 // a schema that describes the update contact object
-const updateContactontactSchema = {
+const updateContactSchema = {
 	firstName: joi.string(),
 	lastName: joi.string(),
 	phone: joi.string().regex(phoneNumRegex),
@@ -165,7 +174,7 @@ router.patch('/:contactId', (req, res, _next) => {
 	// }
 	const contactId = Number(req.params.contactId);
 
-	const { error, value } = joi.validate<IUpdateContact>(req.body, updateContactontactSchema, {
+	const { error, value } = joi.validate<IUpdateContact>(req.body, updateContactSchema, {
 		abortEarly: false,
 		stripUnknown: true,
 	});
@@ -181,17 +190,17 @@ router.patch('/:contactId', (req, res, _next) => {
 
   
 	if (contact && value) {
-    // to block the contact
+		// to block the contact
 		if (value.isBlocked) {
-      contact.isBlocked = true;
-    }
-    
-    // delete the isBlocked property so we can have an object that can be spread into the old contact value
-    delete value.isBlocked;
-    const newValue = { ...contact.value, ...value }
-    contact.value = newValue
+			contact.isBlocked = true;
+		}
+
+		// delete the isBlocked property so we can have an object that can be spread into the old contact value
+		delete value.isBlocked;
+		const newValue = { ...contact.value, ...value };
+		contact.value = newValue;
 		res.status(200).json({ contact });
-    
+
 		return;
 	}
 	res.status(404).json({ error: `No contact was found with id - ${contactId}, contact could have been be blocked` });
