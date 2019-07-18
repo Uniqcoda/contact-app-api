@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">91.18% </span>
+        <span class="strong">90% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>62/68</span>
+        <span class='fraction'>63/70</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">83.33% </span>
@@ -30,14 +30,14 @@
         <span class='fraction'>20/24</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">91.67% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>10/10</span>
+        <span class='fraction'>11/12</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">90.77% </span>
+        <span class="strong">89.55% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>59/65</span>
+        <span class='fraction'>60/67</span>
       </div>
     </div>
     <p class="quiet">
@@ -246,7 +246,17 @@
 <a name='L198'></a><a href='#L198'>198</a>
 <a name='L199'></a><a href='#L199'>199</a>
 <a name='L200'></a><a href='#L200'>200</a>
-<a name='L201'></a><a href='#L201'>201</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L201'></a><a href='#L201'>201</a>
+<a name='L202'></a><a href='#L202'>202</a>
+<a name='L203'></a><a href='#L203'>203</a>
+<a name='L204'></a><a href='#L204'>204</a>
+<a name='L205'></a><a href='#L205'>205</a>
+<a name='L206'></a><a href='#L206'>206</a>
+<a name='L207'></a><a href='#L207'>207</a>
+<a name='L208'></a><a href='#L208'>208</a>
+<a name='L209'></a><a href='#L209'>209</a>
+<a name='L210'></a><a href='#L210'>210</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -303,6 +313,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -344,8 +363,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -427,7 +446,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
@@ -448,6 +466,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import express from 'express';
 import joi from '@hapi/joi';
+import { Contact } from '../models/contacts.model';
 &nbsp;
 const router = express.Router();
 &nbsp;
@@ -490,20 +509,29 @@ const phoneNumRegex = /^(\+[0-9]{3}|0)[0-9]{10}$/;
 &nbsp;
 // a schema that describes the contact object
 const contactSchema = {
-	firstName: joi.string().required(),
-	lastName: joi.string().optional(),
+	firstName: joi
+		.string()
+		.trim()
+		.required(),
+	lastName: joi
+		.string()
+		.trim()
+		.optional(),
 	phone: joi
 		.string()
 		.required()
+		.trim()
 		.regex(phoneNumRegex),
 	email: joi
 		.string()
 		.optional()
+		.lowercase()
+		.trim()
 		.email(),
 };
 &nbsp;
 // a schema that describes the update contact object
-const updateContactontactSchema = {
+const updateContactSchema = {
 	firstName: joi.string(),
 	lastName: joi.string(),
 	phone: joi.string().regex(phoneNumRegex),
@@ -543,9 +571,9 @@ router.post('/', (req, res, _next) =&gt; {
 &nbsp;
 // TO GET ALL CONTACTS
 router.get('/', (_req, res, _next) =&gt; {
-	const contacts = getUnblocked();
-&nbsp;
-	res.status(200).json({ contacts });
+	Contact.find()
+		.then(contacts =&gt; res.status(200).json(contacts))
+		.catch(<span class="fstat-no" title="function not covered" >err </span>=&gt; <span class="cstat-no" title="statement not covered" >res.status(400).json(`Error: ${err}`))</span>;
 });
 &nbsp;
 //  TO GET A CONTACT BY ID
@@ -613,7 +641,7 @@ router.patch('/:contactId', (req, res, _next) =&gt; {
 	// }
 	const contactId = Number(req.params.contactId);
 &nbsp;
-	const { error, value } = joi.validate&lt;IUpdateContact&gt;(req.body, updateContactontactSchema, {
+	const { error, value } = joi.validate&lt;IUpdateContact&gt;(req.body, updateContactSchema, {
 		abortEarly: false,
 		stripUnknown: true,
 	});
@@ -627,19 +655,18 @@ router.patch('/:contactId', (req, res, _next) =&gt; {
 	// confirm that contact with id exists
 	const contact = contactsArray.find(contact =&gt; contact.id === contactId &amp;&amp; !contact.isBlocked);
 &nbsp;
-  
 	<span class="missing-if-branch" title="else path not taken" >E</span>if (contact &amp;&amp; value) {
-    // to block the contact
+		// to block the contact
 		if (value.isBlocked) {
-      contact.isBlocked = true;
-    }
-    
-    // delete the isBlocked property so we can have an object that can be spread into the old contact value
-    delete value.isBlocked;
-    const newValue = { ...contact.value, ...value }
-    contact.value = newValue
+			contact.isBlocked = true;
+		}
+&nbsp;
+		// delete the isBlocked property so we can have an object that can be spread into the old contact value
+		delete value.isBlocked;
+		const newValue = { ...contact.value, ...value };
+		contact.value = newValue;
 		res.status(200).json({ contact });
-    
+&nbsp;
 		return;
 	}
 <span class="cstat-no" title="statement not covered" >	res.status(404).json({ error: `No contact was found with id - ${contactId}, contact could have been be blocked` });</span>
@@ -652,7 +679,7 @@ export default router;
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Jul 18 2019 16:25:41 GMT+0100 (West Africa Standard Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Jul 18 2019 18:34:12 GMT+0100 (West Africa Standard Time)
 </div>
 </div>
 <script src="../../prettify.js"></script>
