@@ -154,24 +154,14 @@ router.patch('/:contactId', (req, res, _next) => {
 		return;
 	}
 
-	// confirm that contact with id exists
-	const contact = contactsArray.find(contact => contact.id === contactId && !contact.isBlocked);
+	// a contact can be blocked and unblocked this way
+	Contact.findByIdAndUpdate(req.params.contactId, { $set: value, new: true })
+		.then(() => {
+			res.status(200).json('Update was successful');
+		})
+		.catch(err => res.status(400).json(`Error: ${err}`));
 
-	if (contact && value) {
-		// to block the contact
-		if (value.isBlocked) {
-			contact.isBlocked = true;
-		}
-
-		// delete the isBlocked property so we can have an object that can be spread into the old contact value
-		delete value.isBlocked;
-		const newValue = { ...contact.value, ...value };
-		contact.value = newValue;
-		res.status(200).json({ contact });
-
-		return;
-	}
-	res.status(404).json({ error: `No contact was found with id - ${contactId}, contact could have been be blocked` });
+	// res.status(404).json({ error: `No contact was found with id - ${contactId}, contact could have been be blocked` });
 });
 
 export default router;
