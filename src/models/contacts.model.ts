@@ -9,10 +9,6 @@ export interface ICreateContact extends mongoose.Document {
 const Schema = mongoose.Schema;
 
 const contactSchema = new Schema({
-	id: Number,
-	createdAt: String, // the ISO date of when the contact was created
-	isBlocked: Boolean,
-	value: {
 	firstName: String,
 	lastName: String,
 	phone: String,

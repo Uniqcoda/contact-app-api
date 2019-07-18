@@ -4,38 +4,12 @@ import { Contact } from '../models/contacts.model';
 
 const router = express.Router();
 
-export interface ICreateContact {
-	firstName: string;
-	lastName: string;
-	phone: string;
-	email: string;
-}
-
 interface IUpdateContact {
 	isBlocked: boolean;
 	firstName: string;
 	lastName: string;
 	phone: string;
 	email: string;
-}
-
-export interface ICreateContactResponse {
-	id: number; // the auto generated id of the new contact
-	createdAt: string; // the ISO date of when the contact was created
-	isBlocked: boolean;
-	value: ICreateContact;
-}
-
-export const contactsArray: ICreateContactResponse[] = [];
-// id generator
-function idGenerator() {
-	const newId = contactsArray.length ? contactsArray[contactsArray.length - 1].id + 1 : 1;
-	return newId;
-}
-
-// A function that filters the contacts array for unblocked contacts
-function getUnblocked() {
-	return contactsArray.filter(contact => contact.isBlocked === false);
 }
 
 // the phone num should either start with country code or 0 (example +2348067546986, or 08067546986)
@@ -71,14 +45,6 @@ const updateContactSchema = {
 	phone: joi.string().regex(phoneNumRegex),
 	email: joi.string().email(),
 	isBlocked: joi.boolean(),
-};
-
-// a schema that describes the contact id
-export const idSchema = {
-	contactId: joi
-		.number()
-		.integer()
-		.required(),
 };
 
 // TO ADD A CONTACT
@@ -131,18 +97,6 @@ router.delete('/:contactId', (req, res, _next) => {
 
 // TO UPDATE A CONTACT BY ID
 router.patch('/:contactId', (req, res, _next) => {
-	// const {
-	// 	error,
-	// 	value: { contactId },
-	// } = joi.validate<{ contactId: number }>(req.params, idSchema, { abortEarly: false, stripUnknown: true });
-
-	// if (error) {
-	// 	res.status(400).json({ error });
-
-	// 	return;
-	// }
-	const contactId = Number(req.params.contactId);
-
 	const { error, value } = joi.validate<IUpdateContact>(req.body, updateContactSchema, {
 		abortEarly: false,
 		stripUnknown: true,
