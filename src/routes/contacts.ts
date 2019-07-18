@@ -122,29 +122,11 @@ router.get('/:contactId', (req, res, _next) => {
 
 // TO DELETE A CONTACT BY ID
 router.delete('/:contactId', (req, res, _next) => {
-	const {
-		error,
-		value: { contactId },
-	} = joi.validate<{ contactId: number }>(req.params, idSchema, { abortEarly: false, stripUnknown: true });
-
-	if (error) {
-		res.status(400).json({ error });
-		return;
-	}
-
-	for (const index in contactsArray) {
-		const contact = contactsArray[index];
-
-		if (contact.id === contactId) {
-			contactsArray.splice(Number(index), 1);
-			const contacts = getUnblocked();
-
-			res.status(200).json({ contacts });
-			return;
-		}
-	}
-
-	res.status(404).json({ error: `No contact was found with id - ${contactId} ` });
+	Contact.findByIdAndDelete(req.params.contactId)
+		.then(contact => {
+			res.status(200).json(`${contact!.firstName} ${contact!.lastName}'s contact deleted!`);
+		})
+		.catch(err => res.status(400).json(`Error: ${err}`));
 });
 
 // TO UPDATE A CONTACT BY ID
