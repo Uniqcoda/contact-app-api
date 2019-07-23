@@ -5,11 +5,11 @@ import { Contact } from '../models/contacts.model';
 const router = express.Router();
 
 interface IUpdateContact {
-	isBlocked: boolean;
 	firstName: string;
 	lastName: string;
 	phone: string;
 	email: string;
+	isBlocked: boolean;
 }
 
 // the phone num should either start with country code or 0 (example +2348067546986, or 08067546986)
