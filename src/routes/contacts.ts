@@ -1,6 +1,7 @@
 import express from 'express';
 import joi from '@hapi/joi';
 import { Contact } from '../models/contacts.model';
+import { contactSchema, updateContactSchema } from '../controllers/index';
 
 const router = express.Router();
 
@@ -11,41 +12,6 @@ interface IUpdateContact {
 	email: string;
 	isBlocked: boolean;
 }
-
-// the phone num should either start with country code or 0 (example +2348067546986, or 08067546986)
-const phoneNumRegex = /^(\+[0-9]{3}|0)[0-9]{10}$/;
-
-// a schema that describes the contact object
-const contactSchema = {
-	firstName: joi
-		.string()
-		.trim()
-		.required(),
-	lastName: joi
-		.string()
-		.trim()
-		.optional(),
-	phone: joi
-		.string()
-		.required()
-		.trim()
-		.regex(phoneNumRegex),
-	email: joi
-		.string()
-		.optional()
-		.lowercase()
-		.trim()
-		.email(),
-};
-
-// a schema that describes the update contact object
-const updateContactSchema = {
-	firstName: joi.string(),
-	lastName: joi.string(),
-	phone: joi.string().regex(phoneNumRegex),
-	email: joi.string().email(),
-	isBlocked: joi.boolean(),
-};
 
 // TO ADD A CONTACT
 router.post('/', (req, res, _next) => {
