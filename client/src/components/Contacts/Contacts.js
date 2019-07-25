@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { Tab, Row, Col, ListGroup, Button, Form, InputGroup, Collapse, Accordion } from 'react-bootstrap';
-import { FaPlus } from 'react-icons/fa';
-import AddContact from './AddContact';
+import { Tab, Row, Col, ListGroup, Button, Form, InputGroup, Accordion, Card } from 'react-bootstrap';
+import { IoIosMail, IoIosCall, IoIosPerson, IoMdPersonAdd } from 'react-icons/io';
 
-const CONTACTS = gql`
+import CreateContact from './CreateContact';
+
+export const CONTACTS = gql`
 	{
 		contacts {
 			id
@@ -19,18 +20,12 @@ const CONTACTS = gql`
 `;
 
 export default function Contacts() {
-	const [open, setOpen] = useState(false);
-	function openContact(e) {
-		return setOpen(!open);
-	}
-
 	return (
 		<div style={{ marginTop: '5px' }}>
-			<Tab.Container id='list-group-tabs-example'>
+			<Tab.Container id='list-group-tabs-example' defaultActiveKey="#createContact">
 				<Row>
 					<Col sm={4}>
 						<ListGroup>
-							<div>
 							<InputGroup className='mb-3'>
 								<Form.Control
 									type='text'
@@ -65,29 +60,35 @@ export default function Contacts() {
 																}
 															})()}
 															{contact.email}
-															<Button variant='outline-primary' size='sm'>
+
+															<Button href="#updateContact" variant='outline-primary' size='sm'>
 																Edit
 															</Button>
-															<Button variant='outline-warning' size='sm'>
+															<Button style={{ marginLeft: '5px' }} variant='outline-warning' size='sm'>
 																Block
 															</Button>
-															<Button variant='outline-danger' size='sm'>
+															<Button style={{ marginLeft: '5px' }} variant='outline-danger' size='sm'>
 																Delete
 															</Button>
-														</div>
-													</Collapse>
-												</ListGroup.Item>
-											))
-										)
-									}
-								</Query>
-							</div>
+														</Card.Body>
+													</Accordion.Collapse>
+												</div>
+											));
+										}}
+									</Query>
+								</Card>
+							</Accordion>
 						</ListGroup>
 					</Col>
 					<Col sm={8}>
-						<ListGroup.Item>
-							<AddContact></AddContact>
-						</ListGroup.Item>
+						<Tab.Content>
+						<Tab.Pane eventKey="#createContact">
+						<CreateContact ></CreateContact>
+        </Tab.Pane>
+        <Tab.Pane eventKey="#updateContact">
+          {/* <Sonnet /> */}
+        </Tab.Pane>
+						</Tab.Content>
 					</Col>
 				</Row>
 			</Tab.Container>
