@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { Tab, Row, Col, ListGroup, Button, ButtonToolbar } from 'react-bootstrap';
+import { Tab, Row, Col, ListGroup, Button, InputGroup, Form } from 'react-bootstrap';
 
 const CONTACTS = gql`
 	{
@@ -17,28 +17,43 @@ const CONTACTS = gql`
 `;
 
 export default function BlockedContacts() {
-	
 	return (
-		<div>
-			<h3>List of all blocked contacts</h3>
-			<Tab.Container id='list-group-tabs-example' defaultActiveKey='#link2'>
+		<div style={{ marginTop: '5px' }}>
+			<Tab.Container id='list-group-tabs-example'>
 				<Row>
 					<Col sm={4}>
 						<ListGroup>
-							<Query query={CONTACTS}>
-								{({ loading, data }) =>
-									loading ? (
-										<h4>I am loading ...</h4>
-									) : (
-										data.blockedContacts.map((contact) => (
-											<ListGroup.Item key={contact.id}>
-												{contact.firstName} {contact.lastName}
-  <Button href="#" size="sm" style={{marginLeft: '5px', float: 'right'}}>unblock</Button>
-											</ListGroup.Item>
-										))
-									)
-								}
-							</Query>
+							<div>
+								<InputGroup className='mb-3'>
+									<Form.Control
+										type='text'
+										placeholder='Search'
+										aria-label='Default'
+										aria-describedby='inputGroup-sizing-default'
+									/>
+									<Button href='#' style={{ marginLeft: '5px', float: 'right' }}>
+										Unblock All{' '}
+									</Button>
+								</InputGroup>
+							</div>
+							<div style={{ overflowY: 'scroll', height: '500px' }}>
+								<Query query={CONTACTS}>
+									{({ loading, data }) =>
+										loading ? (
+											<h4>I am loading ...</h4>
+										) : (
+											data.blockedContacts.map(contact => (
+												<ListGroup.Item key={contact.id}>
+													{contact.firstName} {contact.lastName}
+													<Button href='#' size='sm' style={{ marginLeft: '5px', float: 'right' }}>
+														unblock
+													</Button>
+												</ListGroup.Item>
+											))
+										)
+									}
+								</Query>
+							</div>
 						</ListGroup>
 					</Col>
 					<Col sm={8}>

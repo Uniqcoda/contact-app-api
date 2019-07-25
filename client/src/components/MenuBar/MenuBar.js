@@ -1,9 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Navbar from 'react-bootstrap/Navbar';
-import Nav from 'react-bootstrap/Nav';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
+import { Navbar, Nav } from 'react-bootstrap';
 
 export default function MenuBar() {
 	return (
@@ -20,10 +17,6 @@ export default function MenuBar() {
 						Blocked Contacts
 					</Nav.Link>
 				</Nav>
-				<Form inline>
-					<Form.Control type='text' placeholder='Search Contacts' className='mr-sm-2' />
-					<Button variant='outline-light'>Search</Button>
-				</Form>
 			</Navbar>
 		</>
 	);
