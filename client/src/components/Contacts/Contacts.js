@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { Tab, Row, Col, ListGroup } from 'react-bootstrap';
+import { Tab, Row, Col, ListGroup, Button } from 'react-bootstrap';
 
 const CONTACTS = gql`
 	{
@@ -17,6 +17,16 @@ const CONTACTS = gql`
 `;
 
 export default function Contacts() {
+	const [contact, setContact] = useState({
+		firstName: 'Dlamini',
+		lastName: 'Fishbourn',
+		phone: '+2348056431780',
+		email: 'ochukoe@yah.com',
+	});
+	function contactDetails(e) {
+		let exactContact;
+	}
+
 	return (
 		<div>
 			<h3>List of all non-blocked contacts</h3>
@@ -24,14 +34,17 @@ export default function Contacts() {
 				<Row>
 					<Col sm={4}>
 						<ListGroup>
+							<ListGroup.Item>
+							<Button href="#" size="lg" style={{marginLeft: '5px', float: 'right'}}><span style={{color: 'white'}} class="glyphicon glyphicon-plus" aria-hidden="true">Add</span></Button>
+							</ListGroup.Item>
 							<Query query={CONTACTS}>
 								{({ loading, data }) =>
 									loading ? (
 										<h4>I am loading ...</h4>
 									) : (
-										data.contacts.map((contact, index) => (
-											<ListGroup.Item key={index} action href='#link1' onClick={contactDetails}>
-												{contact.firstName}
+										data.contacts.map(contact => (
+											<ListGroup.Item key={contact.id} action onClick={contactDetails}>
+												{contact.firstName} {contact.lastName} <i>{contact.phone}</i>
 											</ListGroup.Item>
 										))
 									)
