@@ -38,20 +38,19 @@ export default function BlockedContacts() {
 							</div>
 							<div style={{ overflowY: 'scroll', height: '500px' }}>
 								<Query query={CONTACTS}>
-									{({ loading, data }) =>
-										loading ? (
-											<h4>I am loading ...</h4>
-										) : (
-											data.blockedContacts.map(contact => (
-												<ListGroup.Item key={contact.id}>
-													{contact.firstName} {contact.lastName}
-													<Button href='#' size='sm' style={{ marginLeft: '5px', float: 'right' }}>
-														unblock
-													</Button>
-												</ListGroup.Item>
-											))
-										)
-									}
+									{({ loading, error, data }) => {
+										if (loading) return <p>Contacts Loading...</p>;
+										if (error) return <p>Error :(</p>;
+
+										return data.blockedContacts.map(contact => (
+											<ListGroup.Item key={contact.id}>
+												{contact.firstName} {contact.lastName}
+												<Button href='#' size='sm' style={{ marginLeft: '5px', float: 'right' }}>
+													unblock
+												</Button>
+											</ListGroup.Item>
+										));
+									}}
 								</Query>
 							</div>
 						</ListGroup>

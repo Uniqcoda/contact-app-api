@@ -31,35 +31,39 @@ export default function Contacts() {
 					<Col sm={4}>
 						<ListGroup>
 							<div>
-								<InputGroup className='mb-3'>
-									<Form.Control
-										type='text'
-										placeholder='Search'
-										aria-label='Default'
-										aria-describedby='inputGroup-sizing-default'
-									/>
-									<Button href='#' style={{ marginLeft: '5px', float: 'right' }}>
-										<FaPlus />
-									</Button>
-								</InputGroup>
-							</div>
-							<div style={{ overflowY: 'scroll', height: '500px' }}>
-								<Query query={CONTACTS}>
-									{({ loading, data }) =>
-										loading ? (
-											<h4>I am loading ...</h4>
-										) : (
-											data.contacts.map(contact => (
-												<ListGroup.Item
-													key={contact.id}
-													action
-													onClick={openContact}
-													aria-controls={`${contact.id}`}
-													aria-expanded={open}
-												>
-													{contact.firstName} {contact.lastName} <i>{contact.phone}</i>
-													<Collapse in={open}>
-														<div id={`${contact.id}`}>
+							<InputGroup className='mb-3'>
+								<Form.Control
+									type='text'
+									placeholder='Search'
+									aria-label='Default'
+									aria-describedby='inputGroup-sizing-default'
+								/>
+								<Button href="#createContact" style={{ marginLeft: '5px', float: 'right' }}>
+									<IoMdPersonAdd />
+								</Button>
+							</InputGroup>
+							<Accordion defaultActiveKey={0} style={{ overflowY: 'scroll', height: '500px' }}>
+								<Card>
+									<Query query={CONTACTS}>
+										{({ loading, error, data }) => {
+											if (loading) return <p>Contacts Loading...</p>;
+											if (error) return <p>Error :(</p>;
+
+											return data.contacts.map((contact, index) => (
+												<div key={index}>
+													<Accordion.Toggle style={{ cursor: 'pointer' }} as={Card.Header} eventKey={index}>
+														<IoIosPerson />
+														{contact.firstName} {contact.lastName}
+														<IoIosCall />
+														<i>{contact.phone}</i>
+													</Accordion.Toggle>
+													<Accordion.Collapse eventKey={index}>
+														<Card.Body>
+															{(() => {
+																if (contact.email) {
+																	return <IoIosMail />;
+																}
+															})()}
 															{contact.email}
 															<Button variant='outline-primary' size='sm'>
 																Edit
