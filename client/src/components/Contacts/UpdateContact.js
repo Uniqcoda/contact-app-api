@@ -4,9 +4,9 @@ import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
 import { CONTACTS } from './Contacts';
 
-const CREATE_CONTACT = gql`
-	mutation CreateContact($firstName: String!, $lastName: String, $phone: String!, $email: String) {
-		createContact(input: { firstName: $firstName, lastName: $lastName, phone: $phone, email: $email }) {
+const UPDATE_CONTACT = gql`
+	mutation UpdateContact($firstName: String!, $phone: String!, $lastName: String, $email: String) {
+		createContact(firstName: $firstName, phone: $phone, lastName: $lastName, email: $email) {
 			firstName
 			lastName
 			phone
@@ -15,7 +15,7 @@ const CREATE_CONTACT = gql`
 	}
 `;
 
-export default function CreateContact(props) {
+export default function UpdateContact(props) {
 	const [input, setInput] = useState({
 		firstName: '',
 		lastName: '',
@@ -29,9 +29,8 @@ export default function CreateContact(props) {
 
 	return (
 		<Mutation
-			mutation={CREATE_CONTACT}
-			variables={input}
-			// refetchQueries={[]}
+			mutation={UPDATE_CONTACT}
+			variables={{ input }}
 			update={(cache, { data: { createContact } }) => {
 				const { contacts } = cache.readQuery({ query: CONTACTS });
 				cache.writeQuery({
@@ -54,10 +53,8 @@ export default function CreateContact(props) {
 								phone: '',
 								email: '',
 							});
-							window.location.reload();
 						}}
 					>
-						<h4 style={{textAlign: 'center'}}>Add New Contact</h4>
 						<Form.Group controlId='formBasicName'>
 							<Form.Label>First Name</Form.Label>
 							<Form.Control
@@ -101,7 +98,7 @@ export default function CreateContact(props) {
 								required
 							/>
 						</Form.Group>
-						<Button variant='primary' type='submit' style={{float: 'right'}}>
+						<Button variant='primary' type='submit'>
 							Add
 						</Button>
 					</Form>

@@ -20,21 +20,21 @@ const app = express();
 const logFormat = process.env.NODE_ENV === 'production' ? 'combined' : 'dev';
 
 app.use(
-  morgan(logFormat, {
-    skip: function(_req, res) {
-      return res.statusCode < 400;
-    },
-    stream: process.stderr,
-  }),
+	morgan(logFormat, {
+		skip: function(_req, res) {
+			return res.statusCode < 400;
+		},
+		stream: process.stderr,
+	})
 );
 
 app.use(
-  morgan(logFormat, {
-    skip: function(_req, res) {
-      return res.statusCode >= 400;
-    },
-    stream: process.stdout,
-  }),
+	morgan(logFormat, {
+		skip: function(_req, res) {
+			return res.statusCode >= 400;
+		},
+		stream: process.stdout,
+	})
 );
 
 // view engine setup
@@ -48,6 +48,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
 
+// const localUri = "mongo://localhost/Contact App"
 const uri = process.env.ATLAS_URI!;
 mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true });
 const connection = mongoose.connection;
@@ -61,11 +62,11 @@ app.use('/blocked-contacts', blockedContactRouter);
 
 // use this for fetching data with GraphQL
 app.use(
-  '/graphql',
-  graphQLHTTP({
-    schema,
-    graphiql: true,
-  }),
+	'/graphql',
+	graphQLHTTP({
+		schema,
+		graphiql: true,
+	})
 );
 
 // catch 404 and forward to error handler

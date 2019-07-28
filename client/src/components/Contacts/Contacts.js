@@ -5,6 +5,7 @@ import { Tab, Row, Col, ListGroup, Button, Form, InputGroup, Accordion, Card } f
 import { IoIosMail, IoIosCall, IoIosPerson, IoMdPersonAdd } from 'react-icons/io';
 
 import CreateContact from './CreateContact';
+import UpdateContact from './UpdateContact';
 
 export const CONTACTS = gql`
 	{
@@ -22,7 +23,7 @@ export const CONTACTS = gql`
 export default function Contacts() {
 	return (
 		<div style={{ marginTop: '5px' }}>
-			<Tab.Container id='list-group-tabs-example' defaultActiveKey="#createContact">
+			<Tab.Container id='list-group-tabs-example' defaultActiveKey='#createContact'>
 				<Row>
 					<Col sm={4}>
 						<ListGroup>
@@ -33,11 +34,11 @@ export default function Contacts() {
 									aria-label='Default'
 									aria-describedby='inputGroup-sizing-default'
 								/>
-								<Button href="#createContact" style={{ marginLeft: '5px', float: 'right' }}>
+								<Button href='#createContact' style={{ marginLeft: '5px', float: 'right' }}>
 									<IoMdPersonAdd />
 								</Button>
 							</InputGroup>
-							<Accordion defaultActiveKey={0} style={{ overflowY: 'scroll', height: '500px' }}>
+							<Accordion defaultActiveKey={0} style={{ overflowY: 'scroll', height: '600px' }}>
 								<Card>
 									<Query query={CONTACTS}>
 										{({ loading, error, data }) => {
@@ -47,29 +48,32 @@ export default function Contacts() {
 											return data.contacts.map((contact, index) => (
 												<div key={index}>
 													<Accordion.Toggle style={{ cursor: 'pointer' }} as={Card.Header} eventKey={index}>
-														<IoIosPerson />
-														{contact.firstName} {contact.lastName}
-														<IoIosCall />
-														<i>{contact.phone}</i>
+														<IoIosPerson /> {contact.firstName} {contact.lastName}
+														<div>
+															<IoIosCall /> <i>{contact.phone}</i>
+														</div>
 													</Accordion.Toggle>
 													<Accordion.Collapse eventKey={index}>
 														<Card.Body>
-															{(() => {
-																if (contact.email) {
-																	return <IoIosMail />;
-																}
-															})()}
-															{contact.email}
-
-															<Button href="#updateContact" variant='outline-primary' size='sm'>
-																Edit
-															</Button>
-															<Button style={{ marginLeft: '5px' }} variant='outline-warning' size='sm'>
-																Block
-															</Button>
-															<Button style={{ marginLeft: '5px' }} variant='outline-danger' size='sm'>
-																Delete
-															</Button>
+															<div style={{marginBottom: '5px'}}>
+																{(() => {
+																	if (contact.email) {
+																		return <IoIosMail />;
+																	}
+																})()}
+																{contact.email}
+															</div>
+															<div>
+																<Button href='#updateContact' variant='outline-primary' size='sm'>
+																	Edit
+																</Button>
+																<Button style={{ marginLeft: '5px' }} variant='outline-warning' size='sm'>
+																	Block
+																</Button>
+																<Button style={{ marginLeft: '5px' }} variant='outline-danger' size='sm'>
+																	Delete
+																</Button>
+															</div>
 														</Card.Body>
 													</Accordion.Collapse>
 												</div>
@@ -82,12 +86,12 @@ export default function Contacts() {
 					</Col>
 					<Col sm={8}>
 						<Tab.Content>
-						<Tab.Pane eventKey="#createContact">
-						<CreateContact ></CreateContact>
-        </Tab.Pane>
-        <Tab.Pane eventKey="#updateContact">
-          {/* <Sonnet /> */}
-        </Tab.Pane>
+							<Tab.Pane eventKey='#createContact'>
+								<CreateContact></CreateContact>
+							</Tab.Pane>
+							<Tab.Pane eventKey='#updateContact'>
+								<UpdateContact></UpdateContact>
+							</Tab.Pane>
 						</Tab.Content>
 					</Col>
 				</Row>
