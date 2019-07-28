@@ -1,5 +1,5 @@
 import { GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLList } from 'graphql';
-import { getAllContacts, getBlockedContacts, getContactById, createContact } from './controllers/index';
+import { getAllContacts, getBlockedContacts, getContactById, createContact, updateContactById } from './controllers/index';
 import { ContactType, ContactInput } from './types/contactType';
 
 const query = new GraphQLObjectType({
@@ -47,6 +47,21 @@ const mutation = new GraphQLObjectType({
 			},
 			resolve: (_, args) => createContact(args.input),
 		},
+		updateContact:{
+			type: ContactType,
+			description: 'Create a new contact',
+			args: {
+				id: {
+					type: GraphQLString,
+					description: 'The ID of the contact to fetch',
+				},
+				input: {
+					type: ContactInput,
+					description: 'The values to create a new contact',
+				},
+			},
+			resolve: (_, args) => updateContactById(args.id, args.input),
+		}
 	}),
 });
 
