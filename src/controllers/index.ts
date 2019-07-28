@@ -77,3 +77,19 @@ export function createContact(contactBody: ICreateContact) {
 	const contact = new Contact(value);
 	return contact.save();
 }
+
+export function updateContactById(id: string, contactBody: ICreateContact) {
+	{
+		const { error, value } = joi.validate(contactBody, contactSchema, {
+			skipFunctions: true,
+			stripUnknown: true,
+			abortEarly: false,
+		});
+		if (error) {
+			throw new Error('Contact body is not valid');
+		}
+		return Contact.findByIdAndUpdate(id, value)
+			.then(data => data)
+			.catch(err => err);
+	}
+}
