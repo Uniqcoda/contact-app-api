@@ -1,4 +1,4 @@
-import { GraphQLObjectType,GraphQLInputObjectType, GraphQLString, GraphQLBoolean } from 'graphql';
+import { GraphQLObjectType,GraphQLInputObjectType, GraphQLString, GraphQLBoolean, GraphQLNonNull } from 'graphql';
 import { ICreateContact } from '../models/contacts.model';
 
 export const ContactType = new GraphQLObjectType<ICreateContact>({
@@ -38,7 +38,7 @@ export const ContactInput = new GraphQLInputObjectType({
 	description: 'Information about creating a single contact',
 	fields: () => ({
 		firstName: {
-			type: GraphQLString,
+			type: new GraphQLNonNull(GraphQLString),
 			description: 'The first name of the contact',
 		},
 		lastName: {
@@ -46,7 +46,7 @@ export const ContactInput = new GraphQLInputObjectType({
 			description: 'The last name of the contact',
 		},
 		phone: {
-			type: GraphQLString,
+			type: new GraphQLNonNull(GraphQLString),
 			description: 'The phone number of the contact',
 		},
 		email: {

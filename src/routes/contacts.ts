@@ -1,7 +1,7 @@
 import express from 'express';
 import joi from '@hapi/joi';
 import { Contact } from '../models/contacts.model';
-import { contactSchema, updateContactSchema } from '../controllers/index';
+import { contactSchema, updateContactSchema } from '../controllers/resolve_functions';
 
 const router = express.Router();
 

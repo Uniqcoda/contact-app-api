@@ -20,6 +20,20 @@ export const CONTACTS = gql`
 	}
 `;
 
+function sortContacts(a, b) {
+	// Use toUpperCase() to ignore character casing
+	const firstNameA = a.firstName.toUpperCase();
+	const firstNameB = b.firstName.toUpperCase();
+
+	let comparison = 0;
+	if (firstNameA > firstNameB) {
+		comparison = 1;
+	} else if (firstNameA < firstNameB) {
+		comparison = -1;
+	}
+	return comparison;
+}
+
 export default function Contacts() {
 	return (
 		<div style={{ marginTop: '5px' }}>
@@ -44,7 +58,7 @@ export default function Contacts() {
 										{({ loading, error, data }) => {
 											if (loading) return <p>Contacts Loading...</p>;
 											if (error) return <p>Error :(</p>;
-
+											data.contacts.sort(sortContacts);
 											return data.contacts.map((contact, index) => (
 												<div key={index}>
 													<Accordion.Toggle style={{ cursor: 'pointer' }} as={Card.Header} eventKey={index}>
@@ -55,7 +69,7 @@ export default function Contacts() {
 													</Accordion.Toggle>
 													<Accordion.Collapse eventKey={index}>
 														<Card.Body>
-															<div style={{marginBottom: '5px'}}>
+															<div style={{ marginBottom: '5px' }}>
 																{(() => {
 																	if (contact.email) {
 																		return <IoIosMail />;

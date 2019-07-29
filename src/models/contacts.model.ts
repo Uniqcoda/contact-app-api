@@ -10,12 +10,12 @@ export interface ICreateContact extends mongoose.Document {
 const Schema = mongoose.Schema;
 
 const contactSchema = new Schema({
-	firstName: String,
+	firstName: { type: String, required: true  },
 	lastName: String,
 	phone: { type: String, index: true, unique: true, required: true },
-	email: { type: String, index: true, unique: true},
+	email: { type: String, index: true, unique: true },
 	isBlocked: { type: Boolean, default: false },
 });
 
-contactSchema.plugin(uniqueValidator, {message: 'is already in your contact.'})
+contactSchema.plugin(uniqueValidator, { message: 'is already in your contact list.' });
 export const Contact = mongoose.model<ICreateContact>('Contact', contactSchema);

@@ -56,15 +56,6 @@ export const contactSchema = {
 		.allow(''),
 };
 
-// a schema that describes the update contact object
-export const updateContactSchema = {
-	firstName: joi.string(),
-	lastName: joi.string(),
-	phone: joi.string().regex(phoneNumRegex),
-	email: joi.string().email(),
-	isBlocked: joi.boolean(),
-};
-
 export function createContact(contactBody: ICreateContact) {
 	const { error, value } = joi.validate(contactBody, contactSchema, {
 		skipFunctions: true,
@@ -77,6 +68,15 @@ export function createContact(contactBody: ICreateContact) {
 	const contact = new Contact(value);
 	return contact.save();
 }
+
+// a schema that describes the update contact object
+export const updateContactSchema = {
+	firstName: joi.string(),
+	lastName: joi.string(),
+	phone: joi.string().regex(phoneNumRegex),
+	email: joi.string().email(),
+	isBlocked: joi.boolean(),
+};
 
 export function updateContactById(id: string, contactBody: ICreateContact) {
 	{

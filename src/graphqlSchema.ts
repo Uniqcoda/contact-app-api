@@ -1,10 +1,16 @@
 import { GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLList } from 'graphql';
-import { getAllContacts, getBlockedContacts, getContactById, createContact, updateContactById } from './controllers/index';
-import { ContactType, ContactInput } from './types/contactType';
+import {
+	getAllContacts,
+	getBlockedContacts,
+	getContactById,
+	createContact,
+	updateContactById,
+} from './controllers/resolve_functions';
+import { ContactType, ContactInput } from './graphql_types/types';
 
 const query = new GraphQLObjectType({
 	name: 'ContacticaApp',
-	description: 'The query root of Contactica App.',
+	description: 'The root query of Contactica App.',
 	fields: () => ({
 		contacts: {
 			type: new GraphQLList(ContactType),
@@ -25,9 +31,7 @@ const query = new GraphQLObjectType({
 					description: 'The ID of the contact to fetch',
 				},
 			},
-			resolve: (_, { id }) => {
-				return getContactById(id);
-			},
+			resolve: (_, { id }) => getContactById(id),
 		},
 	}),
 });
@@ -47,7 +51,7 @@ const mutation = new GraphQLObjectType({
 			},
 			resolve: (_, args) => createContact(args.input),
 		},
-		updateContact:{
+		updateContact: {
 			type: ContactType,
 			description: 'Create a new contact',
 			args: {
@@ -57,11 +61,11 @@ const mutation = new GraphQLObjectType({
 				},
 				input: {
 					type: ContactInput,
-					description: 'The values to create a new contact',
+					description: 'The values to update a contact',
 				},
 			},
 			resolve: (_, args) => updateContactById(args.id, args.input),
-		}
+		},
 	}),
 });
 
