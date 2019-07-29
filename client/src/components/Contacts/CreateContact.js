@@ -7,10 +7,12 @@ import { CONTACTS } from './Contacts';
 const CREATE_CONTACT = gql`
 	mutation CreateContact($firstName: String!, $lastName: String, $phone: String!, $email: String) {
 		createContact(input: { firstName: $firstName, lastName: $lastName, phone: $phone, email: $email }) {
+			id
 			firstName
 			lastName
 			phone
 			email
+			isBlocked
 		}
 	}
 `;
@@ -31,7 +33,6 @@ export default function CreateContact(props) {
 		<Mutation
 			mutation={CREATE_CONTACT}
 			variables={input}
-			// refetchQueries={[]}
 			update={(cache, { data: { createContact } }) => {
 				const { contacts } = cache.readQuery({ query: CONTACTS });
 				cache.writeQuery({
@@ -39,6 +40,7 @@ export default function CreateContact(props) {
 					data: { contacts: contacts.concat([createContact]) },
 				});
 			}}
+			refetchQueries={[{ query: CONTACTS }]}
 		>
 			{createContact => (
 				<div>
@@ -54,10 +56,9 @@ export default function CreateContact(props) {
 								phone: '',
 								email: '',
 							});
-							window.location.reload();
 						}}
 					>
-						<h4 style={{textAlign: 'center'}}>Add New Contact</h4>
+						<h4 style={{ textAlign: 'center' }}>Add New Contact</h4>
 						<Form.Group controlId='formBasicName'>
 							<Form.Label>First Name</Form.Label>
 							<Form.Control
@@ -101,7 +102,7 @@ export default function CreateContact(props) {
 								required
 							/>
 						</Form.Group>
-						<Button variant='primary' type='submit' style={{float: 'right'}}>
+						<Button variant='primary' type='submit' style={{ float: 'right' }}>
 							Add
 						</Button>
 					</Form>
